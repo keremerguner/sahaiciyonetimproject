@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "956622457981",
+    "project_id": "sahaiciyonetimproject",
+    "storage_bucket": "sahaiciyonetimproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956622457981:android:e099f84ebc1f3c7848f514",
+        "android_client_info": {
+          "package_name": "com.sahaiciyonetimproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSxORpnNs1WJmE98e5GP3a2IziuzvdGVE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
