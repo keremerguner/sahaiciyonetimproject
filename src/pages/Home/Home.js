@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {Text, View, SafeAreaView} from 'react-native';
+import {Text, View, SafeAreaView, TouchableOpacity} from 'react-native';
 import FloatingButton from '../../components/FloatingButton';
 import ContentInputModal from '../../components/model/ContentInput/ContentInputModal';
+import auth from '@react-native-firebase/auth';
 
 const Home = () => {
   const [inputModalVisible, setInputModalVisible] = useState(false);
@@ -12,7 +13,7 @@ const Home = () => {
 
   function handleSendContent(content) {
     handleInputToggle();
-    console.log(content)
+    console.log(content);
   }
 
   return (
@@ -26,7 +27,7 @@ const Home = () => {
       <Text
         style={{
           fontSize: 22,
-          color: 'white',
+          color: 'black',
           fontWeight: 'bold',
           flex: 1,
           paddingLeft: 10,
@@ -35,6 +36,10 @@ const Home = () => {
         }}>
         Home
       </Text>
+      <TouchableOpacity
+        onPress={() => {
+          auth().signOut();
+        }}><Text>ÇIKIŞ YAP</Text></TouchableOpacity>
       <FloatingButton onPress={handleInputToggle} />
       <ContentInputModal
         isVisible={inputModalVisible}

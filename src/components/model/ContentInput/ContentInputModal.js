@@ -8,9 +8,9 @@ import {showMessage} from 'react-native-flash-message';
 const ContentInputModal = ({isVisible, onClose, onSend}) => {
   const [text, setText] = useState(null);
 
-  function handleSend() {
-    if(!text){
-        return;
+  function handleSend() {
+    if (!text) {
+      return;
     }
     onSend(text);
     setText(null);
@@ -22,10 +22,15 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
       onSwipeComplete={onClose}
       onBackButtonPress={onClose}
       onBackdropPress={onClose}
-      style={styles.modal}>
+      style={styles.modal}
+      swipeDirection="down">
       <View style={styles.container}>
-        <View style={styles.input_container} >
-        <TextInput placeholder="TextInput..." onChangeText={setText} multiline />
+        <View style={styles.input_container}>
+          <TextInput
+            placeholder="TextInput..."
+            onChangeText={setText}
+            multiline
+          />
         </View>
         <Button text="gönder" onPress={handleSend} />
       </View>
