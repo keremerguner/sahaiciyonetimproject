@@ -4,9 +4,8 @@ const deviceSize = Dimensions.get('window')
 
 export default StyleSheet.create({
     container: {
-        backgroundColor: '#d4d6d5',
-        padding: 15,
-        marginHorizontal: 10,
+        backgroundColor: 'red',
+        padding: 10,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         height: deviceSize.height / 2,

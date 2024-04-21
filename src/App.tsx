@@ -7,6 +7,7 @@ import Login from './pages/Login/Login';
 import Sign from './pages/Sign/Sign';
 
 import FlashMessage from "react-native-flash-message";
+import Home from './pages/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} >
+        <Stack.Screen name='HomePage' component={Home} />
         <Stack.Screen name="AuthStack" component={AuthStack} />
         {/* <Stack.Screen name="SignPage" component={Sign} /> */}
       </Stack.Navigator>
