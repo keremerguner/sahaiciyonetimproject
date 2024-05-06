@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, TextInput, SafeAreaView, Text} from 'react-native';
+import {View, TextInput, SafeAreaView, Text, Platform} from 'react-native';
 import Button from '../../Button';
 import styles from './ContentInputModal.style';
 import Modal from 'react-native-modal';
@@ -30,9 +30,14 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
             placeholder="TextInput..."
             onChangeText={setText}
             multiline
+            style={{
+              padding: Platform.OS === 'android' ? 0 : 14,
+              backgroundColor:'yellow',
+
+            }}
           />
         </View>
-        <Button text="gönder" onPress={handleSend} />
+        <Button text="Üretime Gönder" onPress={handleSend} />
       </View>
     </Modal>
   );
