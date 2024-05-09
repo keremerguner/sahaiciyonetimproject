@@ -13,7 +13,7 @@ const Home = () => {
 
   useEffect(() => {
     database()
-      .ref('messages/')
+      .ref('products/')
       .on('value', snapshot => {
         const contentData = snapshot.val();
         // console.log('content data: ', contentData);
@@ -27,35 +27,85 @@ const Home = () => {
     setInputModalVisible(!inputModalVisible);
   }
 
-  function handleSendContent(content) {
+  function handleSendContent(
+    atananUstaContent,
+    urunAdiContent,
+    urunRengiContent,
+    urunAdediContent,
+    urunOlcusuContent,
+  ) {
     handleInputToggle();
-    console.log(content);
-    sendContent(content);
+    sendContent(
+      atananUstaContent,
+      urunAdiContent,
+      urunRengiContent,
+      urunAdediContent,
+      urunOlcusuContent,
+    );
   }
 
-  function sendContent(content) {
+  function sendContent(
+    atananUstaContent,
+    urunAdiContent,
+    urunRengiContent,
+    urunAdediContent,
+    urunOlcusuContent,
+  ) {
     const userMail = auth().currentUser.email;
 
     const contentObject = {
-      text: content,
+      atananUsta: atananUstaContent,
+      urunAdi: urunAdiContent,
+      urunAdedi: urunAdediContent,
+      urunRengi: urunRengiContent,
+      urunOlcusu: urunOlcusuContent,
       username: userMail.split('@')[0],
       date: new Date().toISOString(),
-      complated: 'not complated',
+      complated: 'HAZIR DEĞİL',
     };
 
     console.log('gonderilen obje: ', contentObject);
 
-    database().ref('messages/').push(contentObject);
+    database().ref('products/').push(contentObject);
   }
 
+  // function handleComplated(item) {
+  //   const completedDate = new Date().toISOString();
+  //   // database().ref(`products/${item.id}/`).update({complated: 'complated'});
+  //   database().ref(`products/${item.id}/`).update({
+  //     complated: 'complated',
+  //     completedAt: completedDate,  // Burada yeni bir tarih/saat bilgisi ekleniyor
+  //   });
+  // }
+
   function handleComplated(item) {
-    database().ref(`messages/${item.id}/`).update({complated: 'complated'});
+    // Eğer sipariş zaten tamamlanmışsa, hiçbir şey yapma
+    if (item.complated === 'TAMAMLANDI') {
+      console.log('Sipariş zaten tamamlandı olarak işaretlenmiş.');
+      return;
+    }
+  
+    // Sipariş daha önce tamamlanmamışsa, tamamlanma zamanını güncelle
+    const completedDate = new Date().toISOString();
+    database().ref(`products/${item.id}/`).update({
+      complated: 'TAMAMLANDI',
+      completedAt: completedDate,  // Yeni tamamlanma tarihini kaydet
+    });
+  }
+  // function handleNotComplated(item) {
+  //   database().ref(`products/${item.id}/`).update({complated: 'not complated'});
+  // }
+  function handleNotComplated(item) {
+    database().ref(`products/${item.id}/`).update({
+      complated: 'HAZIR DEĞİL',
+      completedAt: null,  // Tamamlanma zamanını sil
+    });
   }
 
   const renderContent = ({item}) => {
     // console.log('item.message', item.username)
     return (
-      <MessageCard message={item} onComplated={() => handleComplated(item)} />
+      <MessageCard message={item} onComplated={() => handleComplated(item)} onNotComplated={ () => handleNotComplated(item) } />
     );
   };
 
@@ -72,7 +122,6 @@ const Home = () => {
           fontSize: 22,
           color: 'black',
           fontWeight: 'bold',
-          flex: 1,
           paddingLeft: 10,
           textAlign: 'center',
           alignSelf: 'center',

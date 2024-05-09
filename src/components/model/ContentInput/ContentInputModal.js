@@ -6,14 +6,28 @@ import Modal from 'react-native-modal';
 import {showMessage} from 'react-native-flash-message';
 
 const ContentInputModal = ({isVisible, onClose, onSend}) => {
-  const [text, setText] = useState(null);
+  const [atananUsta, setAtananUsta] = useState(null);
+  const [urunAdi, setUrunAdi] = useState(null);
+  const [urunRengi, setUrunRengi] = useState(null);
+  const [urunAdedi, setUrunAdedi] = useState(null);
+  const [urunOlcusu, setUrunOlcusu] = useState(null);
 
   function handleSend() {
-    if (!text) {
+    if (!atananUsta || !urunAdi || !urunRengi || !urunAdedi || !urunOlcusu) {
+      showMessage({
+        message: 'Tüm alanları doldurun!',
+        icon: 'danger',
+        type: 'danger',
+      });
       return;
+    } else {
+      onSend(atananUsta, urunAdi, urunRengi, urunAdedi, urunOlcusu);
+      setAtananUsta(null);
+      setUrunAdi(null);
+      setUrunRengi(null);
+      setUrunAdedi(null);
+      setUrunOlcusu(null);
     }
-    onSend(text);
-    setText(null);
   }
 
   return (
@@ -27,14 +41,42 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
       <View style={styles.container}>
         <View style={styles.input_container}>
           <TextInput
-            placeholder="TextInput..."
-            onChangeText={setText}
+            placeholder="Atanan Usta..."
+            onChangeText={setAtananUsta}
             multiline
-            style={{
-              padding: Platform.OS === 'android' ? 0 : 14,
-              backgroundColor:'yellow',
-
-            }}
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.input_container}>
+          <TextInput
+            placeholder="Urun Adi..."
+            onChangeText={setUrunAdi}
+            multiline
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.input_container}>
+          <TextInput
+            placeholder="urunRengi..."
+            onChangeText={setUrunRengi}
+            multiline
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.input_container}>
+          <TextInput
+            placeholder="Urun Adedi..."
+            onChangeText={setUrunAdedi}
+            multiline
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.input_container}>
+          <TextInput
+            placeholder="Urun Olcusu..."
+            onChangeText={setUrunOlcusu}
+            multiline
+            style={styles.textInput}
           />
         </View>
         <Button text="Üretime Gönder" onPress={handleSend} />
@@ -42,87 +84,4 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
     </Modal>
   );
 };
-
-/*
-const ContentInputModal = ({ isVisible, onClose, onSend }) => {
-
-    const [workerName, setWorkerName] = useState(null)
-    const [productName, setProductName] = useState(null)
-    const [productColor, setProductColor] = useState(null)
-    const [productPiece, setProductPiece] = useState(null)
-    const [productDimension, setProductDimension] = useState(null)
-
-    function handleSend() {
-
-        if (!workerName || !productColor || !productName || !productPiece || !productDimension) {
-            showMessage({
-                message: 'Tüm alanları doldurun!',
-                icon: 'danger',
-                type: "danger",
-            });
-            return
-        } else {
-            onSend(workerName, productName, productColor, productPiece, productDimension)
-            // console.log('usta:' + text +'color:'+ productColor + 'urun:' + productName + 'adet:' + productPiece )
-            setWorkerName(null)
-            setProductName(null)
-            setProductColor(null)
-            setProductPiece(null)
-            setProductDimension(null)
-        }
-
-    }
-
-    return (
-        <Modal
-            style={styles.modal}
-            isVisible={isVisible}
-            onSwipeComplete={onClose}
-            onBackdropPress={onClose}
-            onBackButtonPress={onClose}
-            swipeDirection='down'
-        >
-            <View style={styles.container}>
-                <View style={styles.input_container}>
-                    <TextInput
-                        placeholder='Worker Name'
-                        onChangeText={setWorkerName}
-                        multiline
-                    />
-                </View>
-                <View style={styles.input_container}>
-                    <TextInput
-                        placeholder='Product Name'
-                        onChangeText={setProductName}
-                        multiline
-                    />
-                </View>
-                <View style={styles.input_container}>
-                    <TextInput
-                        placeholder='Product Color'
-                        onChangeText={setProductColor}
-                        multiline
-                    />
-                </View>
-                <View style={styles.input_container}>
-                    <TextInput
-                        placeholder='Product Dimension'
-                        onChangeText={setProductDimension}
-                        multiline
-                    />
-                </View>
-                <View style={styles.input_container}>
-                    <TextInput
-                        placeholder='Product Piece'
-                        onChangeText={setProductPiece}
-                        multiline
-                    />
-                </View>
-                <Button text='Create Order' onPress={handleSend} />
-            </View>
-        </Modal>
-    )
-}
-*/
-
 export default ContentInputModal;
