@@ -6,10 +6,12 @@ export default StyleSheet.create({
         position: 'absolute',
         bottom: 20,
         borderRadius: 50,
-        width: 60,
-        height: 60,
+        borderWidth:1,
+        borderColor:'white',
+        width: 170,
+        height: 50,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#32cf6b'
+        backgroundColor: '#00B003'
     }
 })

@@ -6,7 +6,7 @@ import styles from './FloatingButton.style'
 const FloatingButton = ({ onPress, icon }) => {
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>
-            <Text style={{ fontSize: 50, marginTop: -5, color:'white' }} >+</Text>
+            <Text style={{ fontSize: 16, marginTop: -5, color:'white' }} >SİPARİŞ OLUŞTUR</Text>
             {/* <Icon name={icon} color="white" size={30} /> */}
         </TouchableOpacity>
     )

@@ -4,7 +4,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#B4905B',
+        backgroundColor: '#F7F7F7',
         padding: 5,
         marginHorizontal: 5,
         marginVertical: 8,
@@ -19,7 +19,7 @@ export default StyleSheet.create({
     },
     user: {
         fontSize: 14,
-        color: 'white',
+        color: '#333333',
     },
     date: {
         fontSize: 14,
