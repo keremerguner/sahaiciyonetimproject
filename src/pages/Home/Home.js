@@ -69,7 +69,7 @@ const Home = () => {
       urunOlcusu: urunOlcusuContent,
       username: userMail.split('@')[0],
       date: new Date().toISOString(),
-      complated: 'HAZIR DEĞİL',
+      complated: 'DEVAM EDİYOR',
     };
 
     console.log('gonderilen obje: ', contentObject);
@@ -96,7 +96,13 @@ const Home = () => {
   // }
   function handleNotComplated(item) {
     database().ref(`products/${item.id}/`).update({
-      complated: 'HAZIR DEĞİL',
+      complated: 'İPTAL EDİLDİ!',
+      completedAt: null, // Tamamlanma zamanını sil
+    });
+  }
+  function handleContinue(item) {
+    database().ref(`products/${item.id}/`).update({
+      complated: 'DEVAM EDİYOR...',
       completedAt: null, // Tamamlanma zamanını sil
     });
   }
@@ -108,6 +114,8 @@ const Home = () => {
         message={item}
         onComplated={() => handleComplated(item)}
         onNotComplated={() => handleNotComplated(item)}
+        onContinue={() => handleContinue(item)}
+
       />
     );
   };

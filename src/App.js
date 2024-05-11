@@ -44,11 +44,14 @@ function App() {
           />
         ) : (
           <Stack.Screen
-            name="Ana Sayfa"
+            name="SAHA İÇİ ÜRÜN YÖNETİM"
             component={Home}
             options={{
+              headerStyle: {
+                backgroundColor: '#EAEDED', // Arka plan rengi
+              },
               headerTitleStyle: {
-                color: '#930AFF', // Mor renk
+                color: 'black', // Mor renk
               },
               headerTitleAlign: 'center', // Başlığı ortalar
               headerLeft: () => (
@@ -59,7 +62,7 @@ function App() {
                       width: 30,
                       height: 30,
                       marginRight: 10,
-                      tintColor: '#930AFF',
+                      tintColor: 'black',
                     }}
                     screenOptions={{headerShown: true}}
                   />
@@ -73,7 +76,7 @@ function App() {
                       width: 30,
                       height: 30,
                       marginRight: 10,
-                      tintColor: '#930AFF',
+                      tintColor: 'black',
                     }}
                     screenOptions={{headerShown: true}}
                   />

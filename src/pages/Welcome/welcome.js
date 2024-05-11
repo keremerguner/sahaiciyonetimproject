@@ -12,10 +12,10 @@ const Welcome = props => {
         />
       </SafeAreaView>
       <SafeAreaView style={styles.textContainer}>
-        <Text style={styles.titleText}>SIYS</Text>
+        <Text style={styles.titleText}>SİYS</Text>
         <Text style={styles.subTitleText}>Çalışmaya</Text>
         <Text style={styles.subTitleText}>başlamaya hazır mısın?</Text>
-        <Text style={{color:'gray', paddingTop:6}}>Siparişini oluştur, kolaylığa ayak uydur...</Text>
+        <Text style={{color:'gray', paddingTop:6, fontStyle:'italic'}}>Siparişini oluştur, kolaylığa ayak uydur...</Text>
         <SafeAreaView style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.loginButton}
