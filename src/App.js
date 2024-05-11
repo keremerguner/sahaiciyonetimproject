@@ -10,6 +10,7 @@ import auth from '@react-native-firebase/auth';
 
 import FlashMessage from 'react-native-flash-message';
 import Home from './pages/Home';
+import Welcome from './pages/Welcome';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,7 @@ function App() {
   const AuthStack = () => {
     return (
       <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="WelcomePage" component={Welcome} />
         <Stack.Screen name="LoginPage" component={Login} />
         <Stack.Screen name="SignPage" component={Sign} />
       </Stack.Navigator>

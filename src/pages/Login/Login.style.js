@@ -1,29 +1,73 @@
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet, Dimensions, Platform} from 'react-native';
+
+const {width, height} = Dimensions.get('window');
 
 export default StyleSheet.create({
   container: {
-    backgroundColor: '#B4905B',
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center'
+    backgroundColor: 'white',
   },
-  text: {
-    fontSize: 22,
-    color: 'black',
-    fontWeight: 'bold',
+  backButton: {
+    marginLeft: 20,
+    marginTop: 30,
+    width: 26,
+    height: 26,
+    tintColor: 'black',
   },
   header: {
-    textAlign: 'center',
-    fontSize: 26,
-    marginTop: 40,
-    color: 'white',
-    fontWeight: 'bold',
+    marginLeft: 20,
+    marginTop: 60,
   },
-  logo: {
-    width: Dimensions.get('window').width * 1,
-    height: Dimensions.get('window').height / 3,
-    resizeMode: 'contain',
-    alignSelf: 'center',
-    marginTop: 40,
+  title: {
+    flexDirection: 'row',
+  },
+  mainTitle: {
+    fontSize: 30,
+    color: '#930AFF',
+  },
+  subTitle: {
+    fontSize: 32,
+    color: 'gray',
+  },
+  welcomeText: {
+    fontSize: 32,
+    fontWeight: '400',
+    color: '#2E2E2E',
+  },
+  formContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    marginTop: 80,
+  },
+  input: {
+    paddingLeft: 10,
+    marginTop: 10,
+    borderWidth: 1,
+    backgroundColor: '#2E2E2E0A',
+    borderColor: '#2E2E2E1A',
+    borderRadius: 10,
+    paddingVertical: Platform.OS === 'ios' ? 16 : 10,
+  },
+  forgotPassword: {
+    textAlign: 'right',
+    marginTop: 10,
+    color: '#2E2E2ECC',
+  },
+  loginButton: {
+    backgroundColor: '#FFD328',
+    alignItems: 'center',
+    marginBottom: 10,
+    paddingVertical: 16,
+    borderRadius: 10,
+  },
+  signUpText: {
+    fontWeight: '400',
+    fontSize: 17,
+    color: '#2E2E2ECC',
+  },
+  signUpLink: {
+    fontWeight: '700',
+    fontSize: 18,
+    color: '#2E2E2ECC',
   },
 });
