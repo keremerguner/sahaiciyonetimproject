@@ -7,14 +7,15 @@ const Welcome = props => {
     <SafeAreaView style={styles.container}>
       <SafeAreaView style={styles.imageContainer}>
         <Image
-          source={require('../../assets/welcomeimages.png')}
+          source={require('../../assets/Frame.png')}
           style={styles.image}
         />
       </SafeAreaView>
       <SafeAreaView style={styles.textContainer}>
-        <Text style={styles.titleText}>Enigma</Text>
-        <Text style={styles.subTitleText}>Farklı odalar,</Text>
-        <Text style={styles.subTitleText}>Farklı muhabbetler...</Text>
+        <Text style={styles.titleText}>SIYS</Text>
+        <Text style={styles.subTitleText}>Çalışmaya</Text>
+        <Text style={styles.subTitleText}>başlamaya hazır mısın?</Text>
+        <Text style={{color:'gray', paddingTop:6}}>Siparişini oluştur, kolaylığa ayak uydur...</Text>
         <SafeAreaView style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.loginButton}

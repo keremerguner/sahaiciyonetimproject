@@ -26,7 +26,7 @@ export default StyleSheet.create({
     color: '#930AFF',
   },
   subTitle: {
-    fontSize: 32,
+    fontSize: 30,
     color: 'gray',
   },
   welcomeText: {

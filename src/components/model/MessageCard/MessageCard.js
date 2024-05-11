@@ -12,11 +12,11 @@ import {formatDistance, parseISO} from 'date-fns';
 import {tr} from 'date-fns/locale';
 
 const MessageCard = ({message, onComplated, onNotComplated}) => {
-  let backgroundColor = '#b0E2ff'; // Varsayılan arka plan rengi
+  let borderColor = '#FFD328'; // Varsayılan arka plan rengi
   if (message.complated === 'TAMAMLANDI') {
-    backgroundColor = '#D2D2D2'; // "complated" özelliği "TAMAMLANDI" ise arka plan rengini yeşil yap
+    borderColor = '#00ee00'; // "complated" özelliği "TAMAMLANDI" ise arka plan rengini yeşil yap
   } else if (message.complated === 'HAZIR DEĞİL') {
-    backgroundColor = '#D2D2D2'; // "complated" özelliği "HAZIR DEĞİL" ise arka plan rengini kırmızı yap
+    borderColor = '#8b0000'; // "complated" özelliği "HAZIR DEĞİL" ise arka plan rengini kırmızı yap
   }
 
   const formatedDate = formatDistance(parseISO(message.date), new Date(), {
@@ -70,28 +70,28 @@ const MessageCard = ({message, onComplated, onNotComplated}) => {
 
   return (
     // <View style={styles.container}>
-    <View style={[styles.container, {backgroundColor}]}>
+    <View style={[styles.container, {borderColor}]}>
       <View style={styles.inner_container}>
         <Text style={styles.user}>Siparişi Olşturan: {message.username}</Text>
         <Text style={styles.date}>{formatedDate}</Text>
       </View>
-      <Text>İsteyen Firma: {message.isteyenFirma} </Text>
-      <Text>Usta: {message.atananUsta} </Text>
-      <Text>Ürün: {message.urunAdi} </Text>
-      <Text>Renk: {message.urunRengi} </Text>
-      <Text>Ölçü: {message.urunOlcusu} </Text>
-      <Text>Adet: {message.urunAdedi} </Text>
+      <Text style={styles.text_color} >İsteyen Firma: {message.isteyenFirma} </Text>
+      <Text style={styles.text_color} >Usta: {message.atananUsta} </Text>
+      <Text style={styles.text_color} >Ürün: {message.urunAdi} </Text>
+      <Text style={styles.text_color} >Renk: {message.urunRengi} </Text>
+      <Text style={styles.text_color} >Ölçü: {message.urunOlcusu} </Text>
+      <Text style={styles.text_color} >Adet: {message.urunAdedi} </Text>
       <Text>
         {!!message.complated && (
           <View>
-            <Text>
+            <Text style={styles.text_color} >
               Son Durumu:
-              <Text>{message.complated}</Text>
+              <Text style={styles.text_color} >{message.complated}</Text>
             </Text>
           </View>
         )}
       </Text>
-      <Text>
+      <Text style={styles.text_color} >
         Tamamlanma Zamanı:{' '}
         {message.completedAt
           ? new Date(message.completedAt).toLocaleString()
@@ -108,12 +108,12 @@ const MessageCard = ({message, onComplated, onNotComplated}) => {
             borderRadius: 30,
             paddingVertical: 6,
             marginHorizontal: 6,
-            backgroundColor: 'gray',
-            borderColor: 'white',
+            backgroundColor: 'white',
+            borderColor: 'gray',
           }}>
           <Image
             source={require('../../../assets/telefon.png')}
-            style={{width: 30, height: 30, tintColor: '#EDEFED'}}
+            style={{width: 30, height: 30, tintColor: 'gray'}}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -125,14 +125,14 @@ const MessageCard = ({message, onComplated, onNotComplated}) => {
             borderRadius: 30,
             paddingVertical: 6,
             marginHorizontal: 6,
-            backgroundColor: '#31B731',
-            borderColor: 'white',
+            backgroundColor: 'white',
+            borderColor: '#31B731',
           }}>
           <Image
             source={require('../../../assets/ok.png')}
             //source={require('../../../assets/ok.png')}
 
-            style={{width: 30, height: 30, tintColor: '#EDEFED'}}
+            style={{width: 30, height: 30, tintColor: '#31B731'}}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -144,12 +144,12 @@ const MessageCard = ({message, onComplated, onNotComplated}) => {
             borderRadius: 30,
             paddingVertical: 6,
             marginHorizontal: 6,
-            backgroundColor: '#A42323',
-            borderColor: 'white',
+            backgroundColor: 'white',
+            borderColor: '#A42323',
           }}>
           <Image
             source={require('../../../assets/cross-button.png')}
-            style={{width: 30, height: 30, tintColor: '#EDEFED'}}
+            style={{width: 30, height: 30, tintColor: '#A42323'}}
           />
         </TouchableOpacity>
       </View>

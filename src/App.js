@@ -47,12 +47,34 @@ function App() {
             name="Ana Sayfa"
             component={Home}
             options={{
+              headerTitleStyle: {
+                color: '#930AFF', // Mor renk
+              },
               headerTitleAlign: 'center', // Başlığı ortalar
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => {}}>
+                  <Image
+                    source={require('./assets/profileIcon.png')}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginRight: 10,
+                      tintColor: '#930AFF',
+                    }}
+                    screenOptions={{headerShown: true}}
+                  />
+                </TouchableOpacity>
+              ),
               headerRight: () => (
                 <TouchableOpacity onPress={() => auth().signOut()}>
                   <Image
                     source={require('./assets/logout.png')}
-                    style={{width: 30, height: 30, marginRight: 10}}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginRight: 10,
+                      tintColor: '#930AFF',
+                    }}
                     screenOptions={{headerShown: true}}
                   />
                 </TouchableOpacity>

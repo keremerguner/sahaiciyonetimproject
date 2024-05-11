@@ -69,8 +69,8 @@ const Login = props => {
 
           <View style={styles.header}>
             <View style={styles.title}>
-              <Text style={styles.mainTitle}>Saha İçi Yönetim</Text>
-              <Text style={styles.subTitle}>'e</Text>
+              <Text style={styles.mainTitle}>Saha İçi Yönetim Sistemi</Text>
+              <Text style={styles.subTitle}>'ne</Text>
             </View>
             <Text style={styles.welcomeText}>Hoşgeldin.</Text>
           </View>
@@ -86,6 +86,7 @@ const Login = props => {
                 </Text>
                 <TextInput
                   value={values.usermail}
+                  autoCapitalize="none"
                   onChangeText={handleChange('usermail')}
                   keyboardType="email-address"
                   style={styles.input}
@@ -95,6 +96,7 @@ const Login = props => {
                   value={values.password}
                   onChangeText={handleChange('password')}
                   secureTextEntry
+                  autoCapitalize="none"
                   style={styles.input}
                   placeholder="Şifre"
                 />
