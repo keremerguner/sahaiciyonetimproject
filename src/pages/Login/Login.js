@@ -34,7 +34,7 @@ const Login = props => {
         formValues.password,
       );
       showMessage({
-        message: 'Giriş Yapıldı',
+        message: 'Başarıyla giriş yapıldı.',
         icon: 'success',
         type: 'success',
       });
@@ -46,7 +46,7 @@ const Login = props => {
         icon: 'danger',
       });
       setLoading(false);
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -100,7 +100,16 @@ const Login = props => {
                   style={styles.input}
                   placeholder="Şifre"
                 />
-                <Text style={styles.forgotPassword}>Şifreni mi unuttun?</Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    showMessage({
+                      message: 'ADMİNLE İLETİŞİME GEÇİN.',
+                      icon: 'warning',
+                      type: 'warning',
+                    })
+                  }>
+                  <Text style={styles.forgotPassword}>Şifreni mi unuttun?</Text>
+                </TouchableOpacity>
               </View>
               <View style={{flex: 1, marginHorizontal: 20, marginTop: 70}}>
                 <TouchableOpacity

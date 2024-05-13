@@ -1,5 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {Text, SafeAreaView, FlatList, ActivityIndicator} from 'react-native';
+import {
+  Text,
+  SafeAreaView,
+  FlatList,
+  ActivityIndicator,
+  View,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import FloatingButton from '../../components/FloatingButton';
 import ContentInputModal from '../../components/model/ContentInput/ContentInputModal';
 import auth from '@react-native-firebase/auth';
@@ -7,7 +15,7 @@ import database from '@react-native-firebase/database';
 import parserContentData from '../../utils/parserContentData';
 import MessageCard from '../../components/model/MessageCard';
 
-const Home = () => {
+const Home = props => {
   const [inputModalVisible, setInputModalVisible] = useState(false);
   const [contentList, setContentList] = useState([]);
   const [loading, setLoading] = useState(true); // Yükleme durumu için state
@@ -69,10 +77,10 @@ const Home = () => {
       urunOlcusu: urunOlcusuContent,
       username: userMail.split('@')[0],
       date: new Date().toISOString(),
-      complated: 'DEVAM EDİYOR',
+      complated: 'DEVAM EDİYOR...',
     };
 
-    console.log('gonderilen obje: ', contentObject);
+    // console.log('gonderilen obje: ', contentObject);
 
     database().ref('products/').push(contentObject);
   }
@@ -80,7 +88,7 @@ const Home = () => {
   function handleComplated(item) {
     // Eğer sipariş zaten tamamlanmışsa, hiçbir şey yapma
     if (item.complated === 'TAMAMLANDI') {
-      console.log('Sipariş zaten tamamlandı olarak işaretlenmiş.');
+      // console.log('Sipariş zaten tamamlandı olarak işaretlenmiş.');
       return;
     }
 
@@ -115,7 +123,6 @@ const Home = () => {
         onComplated={() => handleComplated(item)}
         onNotComplated={() => handleNotComplated(item)}
         onContinue={() => handleContinue(item)}
-
       />
     );
   };
@@ -131,11 +138,60 @@ const Home = () => {
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" /> // Yükleme animasyonu
       ) : (
-        <FlatList
-          data={contentList}
-          renderItem={renderContent}
-          keyExtractor={item => item.id}
-        />
+        <>
+          <SafeAreaView
+            style={{
+              flexDirection: 'row',
+              backgroundColor: '#EBEDEF',
+              height: 70,
+            }}>
+            <TouchableOpacity
+              style={{justifyContent: 'center', marginLeft: 10}}
+              onPress={() => props.navigation.navigate('ProfilePage')}>
+              <Image
+                source={require('../../assets/profileIcon.png')}
+                style={{
+                  width: 32,
+                  height: 32,
+                  tintColor: 'black',
+                }}
+              />
+            </TouchableOpacity>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                flex: 3,
+              }}>
+              <Text
+                style={{
+                  fontSize: 22,
+                  fontWeight: 'bold',
+                  color: 'black',
+                  textAlign: 'center',
+                }}>
+                SAHA İÇİ ÜRÜN YÖNETİM
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => auth().signOut()}
+              style={{justifyContent: 'center', marginRight: 10}}>
+              <Image
+                source={require('../../assets/logout.png')}
+                style={{
+                  width: 32,
+                  height: 32,
+                  tintColor: 'black',
+                }}
+              />
+            </TouchableOpacity>
+          </SafeAreaView>
+          <FlatList
+            data={contentList}
+            renderItem={renderContent}
+            keyExtractor={item => item.id}
+          />
+        </>
       )}
       {/* <FlatList data={contentList} renderItem={renderContent} /> */}
       <FloatingButton onPress={handleInputToggle} />

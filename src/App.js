@@ -11,6 +11,7 @@ import auth from '@react-native-firebase/auth';
 import FlashMessage from 'react-native-flash-message';
 import Home from './pages/Home';
 import Welcome from './pages/Welcome';
+import Profile from './pages/profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,7 +36,7 @@ function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         {!userSession ? (
           <Stack.Screen
             name="AuthStack"
@@ -43,49 +44,55 @@ function App() {
             options={{headerShown: false}}
           />
         ) : (
-          <Stack.Screen
-            name="SAHA İÇİ ÜRÜN YÖNETİM"
-            component={Home}
-            options={{
-              headerStyle: {
-                backgroundColor: '#EAEDED', // Arka plan rengi
-              },
-              headerTitleStyle: {
-                color: 'black', // Mor renk
-              },
-              headerTitleAlign: 'center', // Başlığı ortalar
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => {}}>
-                  <Image
-                    source={require('./assets/profileIcon.png')}
-                    style={{
-                      width: 30,
-                      height: 30,
-                      marginRight: 10,
-                      tintColor: 'black',
-                    }}
-                    screenOptions={{headerShown: true}}
-                  />
-                </TouchableOpacity>
-              ),
-              headerRight: () => (
-                <TouchableOpacity onPress={() => auth().signOut()}>
-                  <Image
-                    source={require('./assets/logout.png')}
-                    style={{
-                      width: 30,
-                      height: 30,
-                      marginRight: 10,
-                      tintColor: 'black',
-                    }}
-                    screenOptions={{headerShown: true}}
-                  />
-                </TouchableOpacity>
-              ),
-            }}
-          />
+          <>
+            <Stack.Screen
+              name="SAHA İÇİ ÜRÜN YÖNETİM"
+              component={Home}
+              options={{
+                headerStyle: {
+                  backgroundColor: '#EAEDED', // Arka plan rengi
+                },
+                headerTitleStyle: {
+                  color: 'black', // Mor renk
+                },
+                headerTitleAlign: 'center', // Başlığı ortalar
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => {}}>
+                    <Image
+                      source={require('./assets/profileIcon.png')}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        marginRight: 10,
+                        tintColor: 'black',
+                      }}
+                      screenOptions={{headerShown: false}}
+                    />
+                  </TouchableOpacity>
+                ),
+                headerRight: () => (
+                  <TouchableOpacity onPress={() => auth().signOut()}>
+                    <Image
+                      source={require('./assets/logout.png')}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        marginRight: 10,
+                        tintColor: 'black',
+                      }}
+                      screenOptions={{headerShown: false}}
+                    />
+                  </TouchableOpacity>
+                ),
+              }}
+            />
+            <Stack.Screen
+              name="ProfilePage"
+              component={Profile}
+              options={{headerShown: false}}
+            />
+          </>
         )}
-        {/* <Stack.Screen name="SignPage" component={Sign} /> */}
       </Stack.Navigator>
       <FlashMessage position="top" />
     </NavigationContainer>

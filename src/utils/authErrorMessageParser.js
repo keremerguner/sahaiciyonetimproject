@@ -20,6 +20,9 @@ export default function (errorCode) {
 
         case 'auth/user-disabled':
             return 'Hesabınız engellendi';
+
+        case 'auth/invalid-credential':
+            return 'Kimlik bilgileri geçersiz';
         default:
             return errorCode;
     }

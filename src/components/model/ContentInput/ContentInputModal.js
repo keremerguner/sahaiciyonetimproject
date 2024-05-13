@@ -83,16 +83,19 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
       swipeDirection="down">
       <View style={styles.container}>
         <View style={styles.input_container}>
-          <TextInput
-            placeholder="İsteyen Firma..."
-            onChangeText={setIsteyenFirma}
-            multiline
-            style={styles.textInput}
+          <RNPickerSelect
+            onValueChange={value => setIsteyenFirma(value)}
+            items={[
+              {label: 'Ekol', value: 'Ekol'},
+              {label: 'Karacan', value: 'Karacan'},
+              {label: 'Yataş', value: 'Yataş'},
+            ]}
+            placeholder={{label: 'Firma seçin...', value: null}}
           />
         </View>
         <View style={styles.input_container}>
           <RNPickerSelect
-          style={styles.picker}
+            style={styles.picker}
             onValueChange={value => {
               const selectedUser = users.find(user => user.value === value);
               setAtananUsta(selectedUser ? selectedUser.label : null);
@@ -100,22 +103,8 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
             items={users}
             placeholder={{label: 'Atanan Usta Seçin...', value: null}}
           />
-
-          {/* <TextInput
-            placeholder="Atanan Usta..."
-            onChangeText={setAtananUsta}
-            multiline
-            style={styles.textInput}
-          /> */}
         </View>
         <View style={styles.input2}>
-          {/* <TextInput
-            placeholder="Urun Adi..."
-            onChangeText={setUrunAdi}
-            multiline
-            style={styles.textInput}
-          /> */}
-
           <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
             <CheckBox
               value={urunAdi === 'Baza'}
@@ -139,30 +128,17 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
           </View>
         </View>
         <View style={styles.input_container}>
-          {/* <TextInput
-            placeholder="urunRengi..."
-            onChangeText={setUrunRengi}
-            multiline
-            style={styles.textInput}
-          /> */}
           <RNPickerSelect
             onValueChange={value => setUrunRengi(value)}
             items={[
               {label: 'Mavi', value: 'Mavi'},
               {label: 'Gri', value: 'Gri'},
               {label: 'Krem', value: 'Krem'},
-              // Diğer değerler
             ]}
             placeholder={{label: 'Ürün Rengi Seçin...', value: null}}
           />
         </View>
         <View style={styles.input_container}>
-          {/* <TextInput
-            placeholder="Urun Adedi..."
-            onChangeText={setUrunAdedi}
-            multiline
-            style={styles.textInput}
-          /> */}
           <RNPickerSelect
             onValueChange={value => setUrunAdedi(value)}
             items={[
@@ -175,19 +151,12 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
           />
         </View>
         <View style={styles.input_container}>
-          {/* <TextInput
-            placeholder="Urun Olcusu..."
-            onChangeText={setUrunOlcusu}
-            multiline
-            style={styles.textInput}
-          /> */}
           <RNPickerSelect
             onValueChange={value => setUrunOlcusu(value)}
             items={[
               {label: '90x120', value: '90x120'},
               {label: '100x200', value: '100x200'},
               {label: '150x200', value: '150x200'},
-              // Diğer değerler
             ]}
             placeholder={{label: 'Ürün Ölçüsü Seçin...', value: null}}
           />

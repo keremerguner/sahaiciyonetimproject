@@ -103,10 +103,10 @@ const Sign = props => {
         type: 'danger',
         icon: 'danger',
       });
-      console.log('Kullanıcı oluşturulamadı: ', error);
+      // console.log('Kullanıcı oluşturulamadı: ', error);
     }
     setLoading(false); // Yüklenme durumunu sonlandır
-    console.log(formValues);
+    // console.log(formValues);
   }
 
   return (
