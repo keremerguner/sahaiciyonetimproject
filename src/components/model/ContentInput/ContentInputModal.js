@@ -18,6 +18,13 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
   const [urunOlcusu, setUrunOlcusu] = useState(null);
   const [isteyenFirma, setIsteyenFirma] = useState(null);
   const [users, setUsers] = useState([]); // Kullanıcıları tutacak state
+  const [firmaModalVisible, setFirmaModalVisible] = useState(false);
+  const [newFirmaName, setNewFirmaName] = useState('');
+  const [firmaList, setFirmaList] = useState([
+    {label: 'Ekol', value: 'Ekol'},
+    {label: 'Karacan', value: 'Karacan'},
+    {label: 'Yataş', value: 'Yataş'},
+  ]);
 
   // Kullanıcıları yükleme
   useEffect(() => {
@@ -36,6 +43,49 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
     // Listener'ı temizleme
     return () => usersRef.off('value');
   }, []);
+
+  useEffect(() => {
+    const firmaRef = database().ref('firmalar');
+    firmaRef.on('value', snapshot => {
+      const loadedFirmalar = [];
+      snapshot.forEach(snap => {
+        loadedFirmalar.push({
+          label: snap.val().name,
+          value: snap.val().name,
+        });
+      });
+      setFirmaList(loadedFirmalar);
+    });
+
+    return () => firmaRef.off('value');
+  }, []);
+
+  const addFirma = () => {
+    if (newFirmaName.trim() !== '') {
+      const firmaRef = database().ref('firmalar');
+      firmaRef
+        .push({name: newFirmaName})
+        .then(() => {
+          setNewFirmaName('');
+          setFirmaModalVisible(false);
+          showMessage({
+            message: 'Firma başarıyla eklendi!',
+            type: 'success',
+          });
+        })
+        .catch(error => {
+          showMessage({
+            message: `Firma eklenirken hata oluştu: ${error.message}`,
+            type: 'danger',
+          });
+        });
+    } else {
+      showMessage({
+        message: 'Lütfen bir firma adı giriniz!',
+        type: 'danger',
+      });
+    }
+  };
 
   function handleSend() {
     setLoading(true);
@@ -82,15 +132,45 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
       style={styles.modal}
       swipeDirection="down">
       <View style={styles.container}>
-        <View style={styles.input_container}>
-          <RNPickerSelect
-            onValueChange={value => setIsteyenFirma(value)}
-            items={[
-              {label: 'Ekol', value: 'Ekol'},
-              {label: 'Karacan', value: 'Karacan'},
-              {label: 'Yataş', value: 'Yataş'},
-            ]}
-            placeholder={{label: 'Firma seçin...', value: null}}
+        <Modal
+          isVisible={firmaModalVisible}
+          onBackdropPress={() => setFirmaModalVisible(false)}>
+          <View
+            style={{backgroundColor: 'white', padding: 20, borderRadius: 10}}>
+            <TextInput
+              placeholder="Firma adı giriniz"
+              value={newFirmaName}
+              onChangeText={setNewFirmaName}
+              style={{
+                height: 40,
+                borderColor: 'gray',
+                borderWidth: 1,
+                marginBottom: 10,
+              }}
+            />
+            <Button text="Ekle" onPress={addFirma} />
+          </View>
+        </Modal>
+        <View style={{flexDirection: 'row'}}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'white',
+              borderRadius: 12,
+              borderColor: '#4A90E2',
+              borderWidth: 0.5,
+              marginTop: 6,
+              justifyContent: 'center',
+            }}>
+            <RNPickerSelect
+              onValueChange={value => setIsteyenFirma(value)}
+              items={firmaList}
+              placeholder={{label: 'Firma seçin...', value: null}}
+            />
+          </View>
+          <Button
+            text="Firma Ekle"
+            onPress={() => setFirmaModalVisible(true)}
           />
         </View>
         <View style={styles.input_container}>
