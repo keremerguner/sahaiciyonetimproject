@@ -18,13 +18,14 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
   const [urunOlcusu, setUrunOlcusu] = useState(null);
   const [isteyenFirma, setIsteyenFirma] = useState(null);
   const [users, setUsers] = useState([]); // Kullanıcıları tutacak state
+
   const [firmaModalVisible, setFirmaModalVisible] = useState(false);
   const [newFirmaName, setNewFirmaName] = useState('');
-  const [firmaList, setFirmaList] = useState([
-    {label: 'Ekol', value: 'Ekol'},
-    {label: 'Karacan', value: 'Karacan'},
-    {label: 'Yataş', value: 'Yataş'},
-  ]);
+  const [firmaList, setFirmaList] = useState([]);
+
+  const [olcuModalVisible, setOlcuModalVisible] = useState(false);
+  const [newOlcu, setNewOlcu] = useState('');
+  const [olcuList, setOlcuList] = useState([]);
 
   // Kullanıcıları yükleme
   useEffect(() => {
@@ -33,7 +34,7 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
       const usersArray = [];
       snapshot.forEach(userSnapshot => {
         usersArray.push({
-          label: userSnapshot.val().email,
+          label: userSnapshot.val().name + ' ' + userSnapshot.val().surname,
           value: userSnapshot.val().uid,
         });
       });
@@ -60,6 +61,21 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
     return () => firmaRef.off('value');
   }, []);
 
+  useEffect(() => {
+    const olcuRef = database().ref('olculer');
+    olcuRef.on('value', snapshot => {
+      const loadedOlculer = [];
+      snapshot.forEach(snap => {
+        loadedOlculer.push({
+          label: snap.val().olcu,
+          value: snap.val().olcu,
+        });
+      });
+      setOlcuList(loadedOlculer);
+    });
+
+    return () => olcuRef.off('value');
+  }, []);
   const addFirma = () => {
     if (newFirmaName.trim() !== '') {
       const firmaRef = database().ref('firmalar');
@@ -82,6 +98,33 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
     } else {
       showMessage({
         message: 'Lütfen bir firma adı giriniz!',
+        type: 'danger',
+      });
+    }
+  };
+
+  const addOlcu = () => {
+    if (newOlcu.trim() !== '') {
+      const olcuRef = database().ref('olculer');
+      olcuRef
+        .push({olcu: newOlcu})
+        .then(() => {
+          setNewOlcu('');
+          setOlcuModalVisible(false);
+          showMessage({
+            message: 'Ölçü başarıyla eklendi!',
+            type: 'success',
+          });
+        })
+        .catch(error => {
+          showMessage({
+            message: `Ölçü eklenirken hata oluştu: ${error.message}`,
+            type: 'danger',
+          });
+        });
+    } else {
+      showMessage({
+        message: 'Lütfen bir ölçü giriniz!',
         type: 'danger',
       });
     }
@@ -178,6 +221,7 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
             style={styles.picker}
             onValueChange={value => {
               const selectedUser = users.find(user => user.value === value);
+              console.log('selectedUser', selectedUser);
               setAtananUsta(selectedUser ? selectedUser.label : null);
             }}
             items={users}
@@ -230,16 +274,44 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
             placeholder={{label: 'Ürün Adedi Seçin...', value: null}}
           />
         </View>
-        <View style={styles.input_container}>
-          <RNPickerSelect
-            onValueChange={value => setUrunOlcusu(value)}
-            items={[
-              {label: '90x120', value: '90x120'},
-              {label: '100x200', value: '100x200'},
-              {label: '150x200', value: '150x200'},
-            ]}
-            placeholder={{label: 'Ürün Ölçüsü Seçin...', value: null}}
-          />
+
+        <Modal
+          isVisible={olcuModalVisible}
+          onBackdropPress={() => setOlcuModalVisible(false)}>
+          <View
+            style={{backgroundColor: 'white', padding: 20, borderRadius: 10}}>
+            <TextInput
+              placeholder="Ürün Ölçüsü Giriniz"
+              value={newOlcu}
+              onChangeText={setNewOlcu}
+              style={{
+                height: 40,
+                borderColor: 'gray',
+                borderWidth: 1,
+                marginBottom: 10,
+              }}
+            />
+            <Button text="Ekle" onPress={addOlcu} />
+          </View>
+        </Modal>
+        <View style={{flexDirection: 'row'}}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'white',
+              borderRadius: 12,
+              borderColor: '#4A90E2',
+              borderWidth: 0.5,
+              marginTop: 6,
+              justifyContent: 'center',
+            }}>
+            <RNPickerSelect
+              onValueChange={value => setUrunOlcusu(value)}
+              items={olcuList}
+              placeholder={{label: 'Ürün Ölçüsü Seçin...', value: null}}
+            />
+          </View>
+          <Button text="Ölçü Ekle" onPress={() => setOlcuModalVisible(true)} />
         </View>
 
         <Button text="Üretime Gönder" onPress={handleSend} loading={loading} />

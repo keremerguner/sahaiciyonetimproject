@@ -125,6 +125,7 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
     // Telefon numarasını aramak için Linking modülünü kullanma
     Linking.openURL(`tel:${message.phoneNumber}`);
   };
+  console.log('message:',message)
 
   return userMail === 'serdarerguner@gmail.com' ||
     message.atananUsta === userMail ? (
@@ -138,6 +139,7 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
       </Text>
       <Text style={styles.text_color}>
         Siparişi Olşturan: {message.username}
+
       </Text>
       <Text style={styles.text_color}>Ürün: {message.urunAdi} </Text>
       <Text style={styles.text_color}>Renk: {message.urunRengi} </Text>
