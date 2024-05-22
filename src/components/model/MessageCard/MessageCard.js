@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -12,10 +12,27 @@ import styles from './MessageCard.style';
 import {formatDistance, parseISO} from 'date-fns';
 import {tr} from 'date-fns/locale';
 import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
 
 const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
   const userMail = auth().currentUser.email;
-
+  const [userFullName, setUserFullName] = useState('');
+  useEffect(() => {
+    const userRef = database()
+      .ref(`users`)
+      .orderByChild('email')
+      .equalTo(message.username);
+    userRef.once('value', snapshot => {
+      if (snapshot.exists()) {
+        snapshot.forEach(childSnapshot => {
+          const userData = childSnapshot.val();
+          setUserFullName(`${userData.name} ${userData.surname}`);
+        });
+      } else {
+        console.log('Kullanıcı bulunamadı:', message.username);
+      }
+    });
+  }, [message.username]);
   // Duruma göre başlangıç renk değerini al
   const getInitialColorValue = status => {
     switch (status) {
@@ -125,7 +142,7 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
     // Telefon numarasını aramak için Linking modülünü kullanma
     Linking.openURL(`tel:${message.phoneNumber}`);
   };
-  console.log('message:',message)
+  // console.log('message:',message)
 
   return userMail === 'serdarerguner@gmail.com' ||
     message.atananUsta === userMail ? (
@@ -137,9 +154,11 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
       <Text style={styles.text_color}>
         İsteyen Firma: {message.isteyenFirma}{' '}
       </Text>
-      <Text style={styles.text_color}>
+      {/* <Text style={styles.text_color}>
         Siparişi Olşturan: {message.username}
-
+      </Text> */}
+      <Text style={styles.text}>
+        Siparişi Oluşturan: {userFullName || 'Firma Sahibi'}
       </Text>
       <Text style={styles.text_color}>Ürün: {message.urunAdi} </Text>
       <Text style={styles.text_color}>Renk: {message.urunRengi} </Text>

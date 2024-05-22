@@ -36,6 +36,7 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
         usersArray.push({
           label: userSnapshot.val().name + ' ' + userSnapshot.val().surname,
           value: userSnapshot.val().uid,
+          email: userSnapshot.val().email,
         });
       });
       setUsers(usersArray);
@@ -222,7 +223,7 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
             onValueChange={value => {
               const selectedUser = users.find(user => user.value === value);
               console.log('selectedUser', selectedUser);
-              setAtananUsta(selectedUser ? selectedUser.label : null);
+              setAtananUsta(selectedUser ? selectedUser.email : null);
             }}
             items={users}
             placeholder={{label: 'Atanan Usta Seçin...', value: null}}

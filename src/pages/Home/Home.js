@@ -75,7 +75,7 @@ const Home = props => {
       urunAdedi: urunAdediContent,
       urunRengi: urunRengiContent,
       urunOlcusu: urunOlcusuContent,
-      username: userMail.split('@')[0],
+      username: userMail,
       date: new Date().toISOString(),
       complated: 'DEVAM EDİYOR...',
     };
