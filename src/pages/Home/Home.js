@@ -3,7 +3,6 @@ import {
   Text,
   SafeAreaView,
   FlatList,
-  ActivityIndicator,
   View,
   TouchableOpacity,
   Image,
@@ -14,6 +13,7 @@ import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 import parserContentData from '../../utils/parserContentData';
 import MessageCard from '../../components/model/MessageCard';
+import LottieView from 'lottie-react-native';
 
 const Home = props => {
   const [inputModalVisible, setInputModalVisible] = useState(false);
@@ -136,23 +136,52 @@ const Home = props => {
         alignItems: 'center',
       }}>
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" /> // Yükleme animasyonu
+        <LottieView
+          source={require('../../assets/lottie/loading.json')}
+          style={{width: '50%', height: '50%'}}
+          autoPlay
+          loop
+        />
       ) : (
         <>
+          <LottieView
+            source={require('../../assets/lottie/home.json')}
+            style={{
+              width: '100%',
+              height: '100%',
+              flex: 1,
+              position: 'absolute',
+            }}
+            autoPlay
+            loop
+          />
           <SafeAreaView
             style={{
               flexDirection: 'row',
-              backgroundColor: '#EBEDEF',
+              backgroundColor: 'white',
               height: 70,
+              width: '100%',
             }}>
+            <LottieView
+              source={require('../../assets/lottie/header.json')}
+              style={{
+                width: '100%',
+                marginBottom: 100,
+                height: '100%',
+                position: 'absolute',
+              }}
+              resizeMode="cover"
+              autoPlay
+              loop
+            />
             <TouchableOpacity
               style={{justifyContent: 'center', marginLeft: 10}}
               onPress={() => props.navigation.navigate('ProfilePage')}>
               <Image
-                source={require('../../assets/profileIcon.png')}
+                source={require('../../assets/images/profileIcon.png')}
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: 30,
+                  height: 30,
                   tintColor: 'black',
                 }}
               />
@@ -165,22 +194,22 @@ const Home = props => {
               }}>
               <Text
                 style={{
-                  fontSize: 22,
-                  fontWeight: 'bold',
-                  color: 'black',
+                  fontSize: 24,
+                  fontWeight: '500',
+                  color: '#930AFF',
                   textAlign: 'center',
                 }}>
-                SAHA İÇİ ÜRÜN YÖNETİM
+                SAHA İÇİ YÖNETİM SİSTEMİ
               </Text>
             </View>
             <TouchableOpacity
               onPress={() => auth().signOut()}
               style={{justifyContent: 'center', marginRight: 10}}>
               <Image
-                source={require('../../assets/logout.png')}
+                source={require('../../assets/images/logout.png')}
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: 30,
+                  height: 30,
                   tintColor: 'black',
                 }}
               />
@@ -190,16 +219,17 @@ const Home = props => {
             data={contentList}
             renderItem={renderContent}
             keyExtractor={item => item.id}
+            style={{backgroundColor: 'white'}}
+          />
+          <FloatingButton onPress={handleInputToggle} />
+          <ContentInputModal
+            isVisible={inputModalVisible}
+            onClose={handleInputToggle}
+            onSend={handleSendContent}
           />
         </>
       )}
       {/* <FlatList data={contentList} renderItem={renderContent} /> */}
-      <FloatingButton onPress={handleInputToggle} />
-      <ContentInputModal
-        isVisible={inputModalVisible}
-        onClose={handleInputToggle}
-        onSend={handleSendContent}
-      />
     </SafeAreaView>
   );
 };

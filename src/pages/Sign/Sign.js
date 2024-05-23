@@ -10,8 +10,7 @@ import {
   Modal,
   Alert,
   Pressable,
-  ActivityIndicator,
-  Platform,
+  ActivityIndicator
 } from 'react-native';
 import styles from './Sign.style';
 import {Formik} from 'formik';
@@ -50,17 +49,17 @@ const Sign = props => {
     }
 
     // Name ve Surname uzunluğunu kontrol et
-    if (!formValues.name || formValues.name.trim().length < 3) {
+    if (!formValues.name || formValues.name.trim().length < 2) {
       showMessage({
-        message: 'Ad en az 3 karakter olmalıdır!',
+        message: 'Ad en az 2 karakter olmalıdır!',
         type: 'danger',
       });
       return;
     }
 
-    if (!formValues.surname || formValues.surname.trim().length < 3) {
+    if (!formValues.surname || formValues.surname.trim().length < 2) {
       showMessage({
-        message: 'Soyad en az 3 karakter olmalıdır!',
+        message: 'Soyad en az 2 karakter olmalıdır!',
         type: 'danger',
       });
       return;
@@ -75,6 +74,20 @@ const Sign = props => {
       return;
     }
 
+    if (
+      !formValues.usermail ||
+      !formValues.password ||
+      !formValues.repassword ||
+      !formValues.name ||
+      !formValues.surname ||
+      !formValues.phone
+    ) {
+      showMessage({
+        message: 'Lütfen tüm alanları doldurunuz',
+        type: 'danger',
+      });
+      return;
+    }
     try {
       setLoading(true); // Yüklenme durumunu başlat
       const userCredential = await auth().createUserWithEmailAndPassword(
@@ -117,7 +130,7 @@ const Sign = props => {
             style={{marginLeft: 20, marginTop: 30}}
             onPress={() => props.navigation.goBack()}>
             <Image
-              source={require('../../assets/Back.png')}
+              source={require('../../assets/images/Back.png')}
               style={{
                 width: 26,
                 height: 26,

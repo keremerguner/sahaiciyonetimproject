@@ -7,7 +7,7 @@ const FloatingButton = ({ onPress, icon }) => {
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>
                       <Image
-            source={require('../../assets/plus.png')}
+            source={require('../../assets/images/plus.png')}
             style={{width: 60, height: 60}}
           />
             {/* <Text style={{ fontSize: 16, marginTop: -5, color:'white' }} >SİPARİŞ OLUŞTUR</Text> */}

@@ -51,7 +51,7 @@ const Profile = (props) => {
 
                         <View style={{ flex: 0.3, marginTop: 30, marginLeft: 10 }} >
                             <TouchableOpacity onPress={() => props.navigation.goBack()} >
-                                <Image source={require('../../assets/Back.png')} style={{
+                                <Image source={require('../../assets/images/Back.png')} style={{
                                     width: 26,
                                     height: 26,
                                     tintColor: 'black'
@@ -64,7 +64,7 @@ const Profile = (props) => {
                         </View>
                     </View>
                     <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 30 }} >
-                        <Image source={require('../../assets/profile.png')} style={{
+                        <Image source={require('../../assets/images/profile.png')} style={{
                             width: 140,
                             height: 140,
                             resizeMode: 'contain',
@@ -91,7 +91,7 @@ const Profile = (props) => {
 
                     <View style={{ flex: 0.3, marginTop: 30, marginLeft: 10 }} >
                         <TouchableOpacity onPress={() => props.navigation.goBack()} >
-                            <Image source={require('../../assets/Back.png')} style={{
+                            <Image source={require('../../assets/images/Back.png')} style={{
                                 width: 26,
                                 height: 26,
                                 tintColor: 'black'
@@ -104,7 +104,7 @@ const Profile = (props) => {
                     </View>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 30 }} >
-                    <Image source={require('../../assets/profile.png')} style={{
+                    <Image source={require('../../assets/images/profile.png')} style={{
                         width: 140,
                         height: 140,
                         resizeMode: 'contain',

@@ -222,7 +222,7 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
             style={styles.picker}
             onValueChange={value => {
               const selectedUser = users.find(user => user.value === value);
-              console.log('selectedUser', selectedUser);
+              // console.log('selectedUser', selectedUser);
               setAtananUsta(selectedUser ? selectedUser.email : null);
             }}
             items={users}

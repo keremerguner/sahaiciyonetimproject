@@ -27,6 +27,15 @@ const Login = props => {
   }
 
   async function handleFormSubmit(formValues) {
+    if (!formValues.usermail || !formValues.password) {
+      showMessage({
+        message: 'Email ve şifre alanlarını doldurunuz.',
+        type: 'danger',
+        icon: 'danger',
+      });
+      return; // Eğer bilgiler eksikse, fonksiyonu burada sonlandır.
+    }
+
     try {
       setLoading(true);
       await auth().signInWithEmailAndPassword(
@@ -58,7 +67,7 @@ const Login = props => {
             style={styles.backButton}
             onPress={() => props.navigation.goBack()}>
             <Image
-              source={require('../../assets/Back.png')}
+              source={require('../../assets/images/Back.png')}
               style={{
                 width: 26,
                 height: 26,

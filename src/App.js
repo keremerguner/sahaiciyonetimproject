@@ -59,7 +59,7 @@ function App() {
                 headerLeft: () => (
                   <TouchableOpacity onPress={() => {}}>
                     <Image
-                      source={require('./assets/profileIcon.png')}
+                      source={require('./assets/images/profileIcon.png')}
                       style={{
                         width: 30,
                         height: 30,
@@ -73,7 +73,7 @@ function App() {
                 headerRight: () => (
                   <TouchableOpacity onPress={() => auth().signOut()}>
                     <Image
-                      source={require('./assets/logout.png')}
+                      source={require('./assets/images/logout.png')}
                       style={{
                         width: 30,
                         height: 30,

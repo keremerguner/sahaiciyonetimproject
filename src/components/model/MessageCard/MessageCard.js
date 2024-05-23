@@ -29,7 +29,7 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
           setUserFullName(`${userData.name} ${userData.surname}`);
         });
       } else {
-        console.log('Kullanıcı bulunamadı:', message.username);
+        // console.log('Kullanıcı bulunamadı:', message.username);
       }
     });
   }, [message.username]);
@@ -197,7 +197,7 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
           disabled={message.complated === 'TAMAMLANDI'} // Disable button if complated is 'İPTAL EDİLDİ!'
         >
           <Image
-            source={require('../../../assets/ok.png')}
+            source={require('../../../assets/images/ok.png')}
             style={{width: 30, height: 30, tintColor: '#31B731'}}
           />
         </TouchableOpacity>
@@ -217,7 +217,7 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
           disabled={message.complated === 'DEVAM EDİYOR...'} // Disable button if complated is 'İPTAL EDİLDİ!'
         >
           <Image
-            source={require('../../../assets/continue.png')}
+            source={require('../../../assets/images/continue.png')}
             style={{width: 30, height: 30, tintColor: '#FFD328'}}
           />
         </TouchableOpacity>
@@ -237,7 +237,7 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
           disabled={message.complated === 'İPTAL EDİLDİ!'} // Disable button if complated is 'İPTAL EDİLDİ!'
         >
           <Image
-            source={require('../../../assets/cross-button.png')}
+            source={require('../../../assets/images/cross-button.png')}
             style={{width: 30, height: 30, tintColor: '#cf142b'}}
           />
         </TouchableOpacity>

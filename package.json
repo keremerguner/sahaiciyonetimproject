@@ -19,6 +19,7 @@
     "@react-navigation/native-stack": "^6.9.26",
     "date-fns": "^3.6.0",
     "formik": "^1.5.8",
+    "lottie-react-native": "^6.7.2",
     "react": "18.2.0",
     "react-native": "0.73.6",
     "react-native-flash-message": "^0.4.2",
