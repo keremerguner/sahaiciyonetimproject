@@ -12,6 +12,7 @@ import FlashMessage from 'react-native-flash-message';
 import Home from './pages/Home';
 import Welcome from './pages/Welcome';
 import Profile from './pages/profile';
+import OrderStatusScreen from './pages/orderstatus/orderstatus';
 
 const Stack = createNativeStackNavigator();
 
@@ -91,6 +92,7 @@ function App() {
               component={Profile}
               options={{headerShown: false}}
             />
+                  <Stack.Screen name="OrderStatus" component={OrderStatusScreen} options={{title: 'Sipariş Durumları'}} />
           </>
         )}
       </Stack.Navigator>

@@ -46,6 +46,7 @@ const Home = props => {
     urunRengiContent,
     urunAdediContent,
     urunOlcusuContent,
+    complatedContent, // Yeni eklediğimiz parametre
   ) {
     handleInputToggle();
     sendContent(
@@ -55,6 +56,7 @@ const Home = props => {
       urunRengiContent,
       urunAdediContent,
       urunOlcusuContent,
+      complatedContent, // Yeni eklediğimiz parametre
     );
   }
 
@@ -65,6 +67,7 @@ const Home = props => {
     urunRengiContent,
     urunAdediContent,
     urunOlcusuContent,
+    complatedContent, // Yeni eklediğimiz parametre
   ) {
     const userMail = auth().currentUser.email;
 
@@ -77,7 +80,7 @@ const Home = props => {
       urunOlcusu: urunOlcusuContent,
       username: userMail,
       date: new Date().toISOString(),
-      complated: 'DEVAM EDİYOR...',
+      complated: complatedContent, // Yeni eklediğimiz parametre
     };
 
     // console.log('gonderilen obje: ', contentObject);
@@ -203,15 +206,11 @@ const Home = props => {
               </Text>
             </View>
             <TouchableOpacity
-              onPress={() => auth().signOut()}
-              style={{justifyContent: 'center', marginRight: 10}}>
+              style={{justifyContent: 'center', marginRight: 10}}
+              onPress={() => props.navigation.navigate('OrderStatus')}>
               <Image
-                source={require('../../assets/images/logout.png')}
-                style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: 'black',
-                }}
+                source={require('../../assets/images/checklist.png')}
+                style={{width: 30, height: 30, tintColor: 'black'}}
               />
             </TouchableOpacity>
           </SafeAreaView>

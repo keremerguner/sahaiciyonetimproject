@@ -13,10 +13,12 @@ import {formatDistance, parseISO} from 'date-fns';
 import {tr} from 'date-fns/locale';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
+import { showMessage } from 'react-native-flash-message';
 
 const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
   const userMail = auth().currentUser.email;
   const [userFullName, setUserFullName] = useState('');
+
   useEffect(() => {
     const userRef = database()
       .ref(`users`)
@@ -29,10 +31,12 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
           setUserFullName(`${userData.name} ${userData.surname}`);
         });
       } else {
-        // console.log('Kullanıcı bulunamadı:', message.username);
+        // sürekli ekrana basıyo
+        // console.log('Geçersiz kullanıcı adı:', message.username);
       }
     });
   }, [message.username]);
+
   // Duruma göre başlangıç renk değerini al
   const getInitialColorValue = status => {
     switch (status) {
@@ -80,26 +84,24 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
     locale: tr,
   });
 
-  // Tamamlanma zamanını silme işlemi için onay diyalogu
-  const handleNotComplatedWithConfirmation = () => {
-    Alert.alert(
-      'Sipariş Durumu Güncelleme', // Başlık
-      'Tamamlanma zamanını silmek istediğinize emin misiniz?', // Mesaj
-      [
-        {
-          text: 'İptal',
-          // onPress: () => console.log('Silme işlemi iptal edildi'),
-          style: 'cancel',
-        },
-        {
-          text: 'Evet',
-          onPress: () => {
-            onNotComplated(message); // onNotComplated fonksiyonunu çağır
-          },
-        },
-      ],
-    );
+  const handleAcceptOrder = () => {
+    database()
+      .ref(`products/${message.id}`)
+      .update({ complated: 'DEVAM EDİYOR...' })
+      .then(() => {
+        showMessage({
+          message: 'Sipariş kabul edildi!',
+          type: 'success',
+        });
+      })
+      .catch(error => {
+        showMessage({
+          message: `Sipariş kabul edilirken hata oluştu: ${error.message}`,
+          type: 'danger',
+        });
+      });
   };
+
   const handleComplatedWithConfirmation = () => {
     Alert.alert(
       'Sipariş Durumu Güncelleme', // Başlık
@@ -107,56 +109,114 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
       [
         {
           text: 'İptal',
-          // onPress: () => console.log('İşlem iptal edildi'),
           style: 'cancel',
         },
         {
           text: 'Evet',
           onPress: () => {
-            onComplated(message); // onComplated fonksiyonunu çağır
+            const completionTime = new Date().toISOString();
+            database()
+              .ref(`products/${message.id}`)
+              .update({ complated: 'TAMAMLANDI', completedAt: completionTime })
+              .then(() => {
+                showMessage({
+                  message: 'Sipariş TAMAMLANDI!',
+                  type: 'success',
+                });
+              })
+              .catch(error => {
+                showMessage({
+                  message: `Sipariş TAMAMLANDI olarak işaretlenirken hata oluştu: ${error.message}`,
+                  type: 'danger',
+                });
+              });
           },
         },
       ],
     );
   };
-  const handleContinue = () => {
+
+  const handleNotComplatedWithConfirmation = () => {
     Alert.alert(
       'Sipariş Durumu Güncelleme', // Başlık
-      'Siparişe devam etmek istediğine emin misiniz?', // Mesaj
+      'Siparişi İPTAL etmek istediğinize emin misiniz?', // Mesaj
       [
         {
           text: 'İptal',
-          // onPress: () => console.log('Devam işlemi iptal edildi'),
           style: 'cancel',
         },
         {
           text: 'Evet',
           onPress: () => {
-            onContinue(message); // onNotComplated fonksiyonunu çağır
+            const cancellationTime = new Date().toISOString();
+            database()
+              .ref(`products/${message.id}`)
+              .update({ complated: 'İPTAL EDİLDİ!', cancelledAt: cancellationTime })
+              .then(() => {
+                showMessage({
+                  message: 'Sipariş İPTAL EDİLDİ!',
+                  type: 'danger',
+                });
+              })
+              .catch(error => {
+                showMessage({
+                  message: `Sipariş iptal edilirken hata oluştu: ${error.message}`,
+                  type: 'danger',
+                });
+              });
           },
         },
       ],
     );
   };
+
+  const handleContinue = () => {
+    Alert.alert(
+      'Sipariş Durumu Güncelleme', // Başlık
+      'Siparişe devam etmek istediğinize emin misiniz?', // Mesaj
+      [
+        {
+          text: 'İptal',
+          style: 'cancel',
+        },
+        {
+          text: 'Evet',
+          onPress: () => {
+            database()
+              .ref(`products/${message.id}`)
+              .update({ complated: 'DEVAM EDİYOR...', completedAt: null, cancelledAt: null })
+              .then(() => {
+                showMessage({
+                  message: `Sipariş DEVAM EDİYOR!`,
+                  type: 'warning',
+                });
+              })
+              .catch(error => {
+                showMessage({
+                  message: `Sipariş DEVAM EDİYOR olarak işaretlenirken hata oluştu: ${error.message}`,
+                  type: 'danger',
+                });
+              });
+          },
+        },
+      ],
+    );
+  };
+
   const handleCall = () => {
     // Telefon numarasını aramak için Linking modülünü kullanma
     Linking.openURL(`tel:${message.phoneNumber}`);
   };
-  // console.log('message:',message)
 
   return userMail === 'serdarerguner@gmail.com' ||
     message.atananUsta === userMail ? (
     <Animated.View style={[styles.container, {borderColor}]}>
       <View style={styles.inner_container}>
-        <Text style={styles.user}>Usta Maili: {message.atananUsta}</Text>
+        <Text style={styles.firma}>
+          İsteyen Firma: {message.isteyenFirma}{' '}
+        </Text>
         <Text style={styles.date}>{formatedDate}</Text>
       </View>
-      <Text style={styles.text_color}>
-        İsteyen Firma: {message.isteyenFirma}{' '}
-      </Text>
-      {/* <Text style={styles.text_color}>
-        Siparişi Olşturan: {message.username}
-      </Text> */}
       <Text style={styles.text}>
         Siparişi Oluşturan: {userFullName || 'Firma Sahibi'}
       </Text>
@@ -164,84 +224,59 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
       <Text style={styles.text_color}>Renk: {message.urunRengi} </Text>
       <Text style={styles.text_color}>Ölçü: {message.urunOlcusu} </Text>
       <Text style={styles.text_color}>Adet: {message.urunAdedi} </Text>
-      <Text>
-        {!!message.complated && (
-          <View>
-            <Text style={styles.text_color}>
-              Son Durumu:
-              <Text style={styles.text_color}>{message.complated}</Text>
-            </Text>
-          </View>
-        )}
-      </Text>
-      <Text style={styles.text_color}>
-        Tamamlanma Zamanı:{' '}
-        {message.completedAt
-          ? new Date(message.completedAt).toLocaleString()
-          : ''}{' '}
-      </Text>
-      <View style={{padding: 10, flexDirection: 'row'}}>
+      {message.complated !== 'ATANDI' && message.complated !== 'DEVAM EDİYOR...' && (
+        <Text style={styles.text_color}>
+          {message.complated === 'İPTAL EDİLDİ!' ? 'İPTAL ZAMANI:' : 'Tamamlanma Zamanı:'}{' '}
+          {message.complated === 'İPTAL EDİLDİ!'
+            ? message.cancelledAt
+              ? new Date(message.cancelledAt).toLocaleString()
+              : ''
+            : message.completedAt
+            ? new Date(message.completedAt).toLocaleString()
+            : ''}{' '}
+        </Text>
+      )}
+      {message.complated === 'ATANDI' ? (
         <TouchableOpacity
-          onPress={handleComplatedWithConfirmation}
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            borderWidth: 1,
-            borderRadius: 30,
-            paddingVertical: 6,
-            marginHorizontal: 6,
-            backgroundColor: 'white',
-            borderColor: '#31B731',
-            opacity: message.complated === 'TAMAMLANDI' ? 0.5 : 1, // Disable button if complated is 'İPTAL EDİLDİ!'
-          }}
-          disabled={message.complated === 'TAMAMLANDI'} // Disable button if complated is 'İPTAL EDİLDİ!'
+          onPress={handleAcceptOrder}
+          style={styles.button}
         >
-          <Image
-            source={require('../../../assets/images/ok.png')}
-            style={{width: 30, height: 30, tintColor: '#31B731'}}
-          />
+          <Text style={styles.buttonText}>SİPARİŞİ KABUL ET</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleContinue}
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            borderWidth: 1,
-            borderRadius: 30,
-            paddingVertical: 6,
-            marginHorizontal: 6,
-            backgroundColor: 'white',
-            borderColor: '#FFD328',
-            opacity: message.complated === 'DEVAM EDİYOR...' ? 0.5 : 1, // Disable button if complated is 'İPTAL EDİLDİ!'
-          }}
-          disabled={message.complated === 'DEVAM EDİYOR...'} // Disable button if complated is 'İPTAL EDİLDİ!'
-        >
-          <Image
-            source={require('../../../assets/images/continue.png')}
-            style={{width: 30, height: 30, tintColor: '#FFD328'}}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleNotComplatedWithConfirmation}
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            borderWidth: 1,
-            borderRadius: 30,
-            paddingVertical: 6,
-            marginHorizontal: 6,
-            backgroundColor: 'white',
-            borderColor: '#cf142b',
-            opacity: message.complated === 'İPTAL EDİLDİ!' ? 0.5 : 1, // Disable button if complated is 'İPTAL EDİLDİ!'
-          }}
-          disabled={message.complated === 'İPTAL EDİLDİ!'} // Disable button if complated is 'İPTAL EDİLDİ!'
-        >
-          <Image
-            source={require('../../../assets/images/cross-button.png')}
-            style={{width: 30, height: 30, tintColor: '#cf142b'}}
-          />
-        </TouchableOpacity>
-      </View>
+      ) : (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={handleComplatedWithConfirmation}
+            style={[styles.button, {borderColor: '#31B731', opacity: message.complated === 'TAMAMLANDI' ? 0.5 : 1}]}
+            disabled={message.complated === 'TAMAMLANDI'}
+          >
+            <Image
+              source={require('../../../assets/images/ok.png')}
+              style={{width: 30, height: 30, tintColor: '#31B731'}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleContinue}
+            style={[styles.button, {borderColor: '#FFD328', opacity: message.complated === 'DEVAM EDİYOR...' ? 0.5 : 1}]}
+            disabled={message.complated === 'DEVAM EDİYOR...'}
+          >
+            <Image
+              source={require('../../../assets/images/continue.png')}
+              style={{width: 30, height: 30, tintColor: '#FFD328'}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleNotComplatedWithConfirmation}
+            style={[styles.button, {borderColor: '#cf142b', opacity: message.complated === 'İPTAL EDİLDİ!' ? 0.5 : 1}]}
+            disabled={message.complated === 'İPTAL EDİLDİ!'}
+          >
+            <Image
+              source={require('../../../assets/images/cross-button.png')}
+              style={{width: 30, height: 30, tintColor: '#cf142b'}}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
     </Animated.View>
   ) : null;
 };

@@ -156,6 +156,7 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
         urunRengi,
         urunAdedi,
         urunOlcusu,
+        'ATANDI' // Yeni eklediğimiz parametre
       );
       setIsteyenFirma(null);
       setAtananUsta(null);

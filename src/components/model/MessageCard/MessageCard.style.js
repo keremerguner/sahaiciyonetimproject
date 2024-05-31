@@ -4,7 +4,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EBEDEF',
-    padding: 5,
+    padding: 10,
     marginHorizontal: 5,
     marginVertical: 8,
     borderRadius: 10,
@@ -17,8 +17,9 @@ export default StyleSheet.create({
   inner_container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
-  user: {
+  firma: {
     fontSize: 14,
     color: '#333333',
     fontWeight: 'bold',
@@ -35,35 +36,37 @@ export default StyleSheet.create({
     paddingVertical: 12,
   },
   footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  button: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
     alignItems: 'center',
-  },
-  dislike_container: {
-    flexDirection: 'row',
+    borderWidth: 1,
+    borderRadius: 30,
+    paddingVertical: 6,
+    marginHorizontal: 6,
     backgroundColor: 'white',
-    padding: 5,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor:'green'
   },
-  dislike_count_container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'green',
-    borderRadius: 25,
-    padding: 3,
+  buttonText: {
+    color: '#31B731',
   },
-  dislike_count_text: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  dislike_text: {
-    color: 'green',
-    fontWeight: 'bold',
+  text: {
+    fontSize: 14,
+    color: '#333333',
+    marginBottom: 5,
   },
   text_color: {
+    fontSize: 14,
     color: 'black',
+    marginBottom: 5,
   },
 });
