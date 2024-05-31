@@ -12,6 +12,8 @@ import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import {formatDistance, parseISO} from 'date-fns';
 import {tr} from 'date-fns/locale';
+import * as Progress from 'react-native-progress';
+import Svg from 'react-native-svg';
 
 const OrderStatusScreen = props => {
   const [completedCount, setCompletedCount] = useState(0);
@@ -25,6 +27,7 @@ const OrderStatusScreen = props => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setModalData] = useState([]);
   const [modalTitle, setModalTitle] = useState('');
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const userMail = auth().currentUser.email;
@@ -77,6 +80,14 @@ const OrderStatusScreen = props => {
       setOngoingOrders(ongoingOrdersList.reverse());
       setCancelledOrders(cancelledOrdersList.reverse());
       setNotComplatedOrders(notComplatedOrdersList.reverse());
+
+      // Puan hesaplama
+      const totalOrders = completed + ongoing + notComplated;
+      let score = 0;
+      if (totalOrders > 0) {
+        score = (completed / totalOrders) * 100;
+      }
+      setProgress(score / 100);
     };
 
     userOrdersRef.on('value', handleData);
@@ -86,12 +97,15 @@ const OrderStatusScreen = props => {
 
   const renderOrderItem = ({item}) => (
     <View style={styles.orderItem}>
-      <Text>{item.isteyenFirma}</Text>
-      <Text>{item.urunAdi}</Text>
-      <Text>{item.urunRengi}</Text>
-      <Text>{item.urunOlcusu}</Text>
-      <Text>{item.urunAdedi}</Text>
-      <Text>{item.formatedDate}</Text>
+      <View style={{flexDirection: 'row'}}>
+        <Text>TARİH: {new Date(item.date).toLocaleString()} </Text>
+        <Text style={{textAlign: 'right', flex: 1}}>{item.formatedDate}</Text>
+      </View>
+      <Text>FİRMA:{item.isteyenFirma}</Text>
+      <Text>ÜRÜN: {item.urunAdi}</Text>
+      <Text>RENK: {item.urunRengi}</Text>
+      <Text>ÖLÇÜ: {item.urunOlcusu}</Text>
+      <Text>ADET: {item.urunAdedi}</Text>
     </View>
   );
 
@@ -128,6 +142,17 @@ const OrderStatusScreen = props => {
         </View>
         <View style={styles.statusRow}>
           <Text style={styles.statusText}>
+            Bekleyen Siparişler: {notComplatedCount}
+          </Text>
+          <TouchableOpacity
+            onPress={() =>
+              openModal('Bekleyen Siparişler', notComplatedOrders)
+            }>
+            <Text style={styles.buttonText}>Göster</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.statusRow}>
+          <Text style={styles.statusText}>
             İptal Edilen Siparişler: {cancelledCount}
           </Text>
           <TouchableOpacity
@@ -137,16 +162,15 @@ const OrderStatusScreen = props => {
             <Text style={styles.buttonText}>Göster</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.statusRow}>
-          <Text style={styles.statusText}>
-            Bekleyen Siparişler: {notComplatedCount}
-          </Text>
-          <TouchableOpacity
-            onPress={() =>
-              openModal('Bekleyen Siparişler', notComplatedOrders)
-            }>
-            <Text style={styles.buttonText}>Göster</Text>
-          </TouchableOpacity>
+        <View style={styles.progressContainer}>
+          <Text style={styles.progressText}>Genel Durum</Text>
+          <Progress.Circle
+            size={100}
+            progress={progress}
+            showsText={true}
+            formatText={() => `${Math.round(progress * 100)}%`}
+            color={'#6200ee'}
+          />
         </View>
       </View>
 
@@ -189,20 +213,38 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   statusContainer: {
-    marginTop: 20,
+    marginBottom: 20,
+    flex: 1,
   },
   statusRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   statusText: {
-    fontSize: 18,
-    marginVertical: 10,
+    fontSize: 16,
   },
   buttonText: {
-    fontSize: 16,
     color: 'blue',
+    fontSize: 16,
+  },
+  progressContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+    flex: 0.6,
+    justifyContent: 'center',
+  },
+  progressText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  orderItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
   modalContainer: {
     flex: 1,
@@ -214,18 +256,13 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '80%',
     backgroundColor: 'white',
-    padding: 20,
     borderRadius: 10,
+    padding: 20,
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
-  },
-  orderItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
   },
   closeButton: {
     marginTop: 20,
