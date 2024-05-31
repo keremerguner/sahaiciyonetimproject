@@ -199,7 +199,7 @@ const Home = props => {
                 style={{
                   fontSize: 24,
                   fontWeight: '500',
-                  color: '#930AFF',
+                  color: 'black',
                   textAlign: 'center',
                 }}>
                 SAHA İÇİ YÖNETİM SİSTEMİ
@@ -210,7 +210,7 @@ const Home = props => {
               onPress={() => props.navigation.navigate('OrderStatus')}>
               <Image
                 source={require('../../assets/images/checklist.png')}
-                style={{width: 30, height: 30, tintColor: 'black'}}
+                style={{width: 30, height: 30, tintColor: '#930AFF'}}
               />
             </TouchableOpacity>
           </SafeAreaView>

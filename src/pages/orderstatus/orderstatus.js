@@ -3,6 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
+  Image,
   SafeAreaView,
   TouchableOpacity,
   Modal,
@@ -13,7 +14,7 @@ import auth from '@react-native-firebase/auth';
 import {formatDistance, parseISO} from 'date-fns';
 import {tr} from 'date-fns/locale';
 import * as Progress from 'react-native-progress';
-import Svg from 'react-native-svg';
+import LottieView from 'lottie-react-native';
 
 const OrderStatusScreen = props => {
   const [completedCount, setCompletedCount] = useState(0);
@@ -116,86 +117,141 @@ const OrderStatusScreen = props => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={() => props.navigation.goBack()}>
-        <Text style={{marginLeft: 10, color: '#000'}}>Geri</Text>
-      </TouchableOpacity>
-      <Text style={styles.title}>Sipariş Durumları</Text>
-      <View style={styles.statusContainer}>
-        <View style={styles.statusRow}>
-          <Text style={styles.statusText}>
-            Tamamlanan Siparişler: {completedCount}
-          </Text>
-          <TouchableOpacity
-            onPress={() => openModal('Tamamlanan Siparişler', completedOrders)}>
-            <Text style={styles.buttonText}>Göster</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.statusRow}>
-          <Text style={styles.statusText}>
-            Devam Eden Siparişler: {ongoingCount}
-          </Text>
-          <TouchableOpacity
-            onPress={() => openModal('Devam Eden Siparişler', ongoingOrders)}>
-            <Text style={styles.buttonText}>Göster</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.statusRow}>
-          <Text style={styles.statusText}>
-            Bekleyen Siparişler: {notComplatedCount}
-          </Text>
-          <TouchableOpacity
-            onPress={() =>
-              openModal('Bekleyen Siparişler', notComplatedOrders)
-            }>
-            <Text style={styles.buttonText}>Göster</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.statusRow}>
-          <Text style={styles.statusText}>
-            İptal Edilen Siparişler: {cancelledCount}
-          </Text>
-          <TouchableOpacity
-            onPress={() =>
-              openModal('İptal Edilen Siparişler', cancelledOrders)
-            }>
-            <Text style={styles.buttonText}>Göster</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.progressContainer}>
-          <Text style={styles.progressText}>Genel Durum</Text>
-          <Progress.Circle
-            size={100}
-            progress={progress}
-            showsText={true}
-            formatText={() => `${Math.round(progress * 100)}%`}
-            color={'#6200ee'}
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <SafeAreaView
+        style={{
+          flexDirection: 'row',
+          flex: 0.1,
+          backgroundColor: 'white',
+          height: 70,
+          width: '100%',
+        }}>
+        <LottieView
+          source={require('../../assets/lottie/header.json')}
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+          }}
+          resizeMode="cover"
+          autoPlay
+          loop
+        />
+        <TouchableOpacity
+          style={{justifyContent: 'center', paddingLeft: 10}}
+          onPress={() => props.navigation.goBack()}>
+          <Image
+            source={require('../../assets/images/Back.png')}
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: '#930AFF',
+            }}
           />
+        </TouchableOpacity>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            flex: 3,
+          }}>
+          <Text
+            style={{
+              fontSize: 24,
+              fontWeight: '500',
+              color: 'black',
+              textAlign: 'center',
+              marginLeft: -20,
+            }}>
+            SİPARİŞ DURUMLARI
+          </Text>
         </View>
-      </View>
-
-      <Modal
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-        animationType="slide"
-        transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{modalTitle}</Text>
-            <FlatList
-              data={modalData}
-              renderItem={renderOrderItem}
-              keyExtractor={(item, index) => index.toString()}
-              contentContainerStyle={{paddingBottom: 20}}
-            />
+      </SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <LottieView
+          source={require('../../assets/lottie/statusbg.json')}
+          style={styles.lottieBackground}
+          autoPlay
+          loop
+        />
+        <View style={styles.statusContainer}>
+          <View style={styles.statusRow}>
+            <Text style={styles.statusText}>
+              Tamamlanan Siparişler: {completedCount}
+            </Text>
             <TouchableOpacity
-              onPress={() => setModalVisible(false)}
-              style={styles.closeButton}>
-              <Text style={styles.buttonText}>Kapat</Text>
+              onPress={() =>
+                openModal('Tamamlanan Siparişler', completedOrders)
+              }>
+              <Text style={styles.buttonText}>Göster</Text>
             </TouchableOpacity>
           </View>
+          <View style={styles.statusRow}>
+            <Text style={styles.statusText}>
+              Devam Eden Siparişler: {ongoingCount}
+            </Text>
+            <TouchableOpacity
+              onPress={() => openModal('Devam Eden Siparişler', ongoingOrders)}>
+              <Text style={styles.buttonText}>Göster</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.statusRow}>
+            <Text style={styles.statusText}>
+              Bekleyen Siparişler: {notComplatedCount}
+            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                openModal('Bekleyen Siparişler', notComplatedOrders)
+              }>
+              <Text style={styles.buttonText}>Göster</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.statusRow}>
+            <Text style={styles.statusText}>
+              İptal Edilen Siparişler: {cancelledCount}
+            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                openModal('İptal Edilen Siparişler', cancelledOrders)
+              }>
+              <Text style={styles.buttonText}>Göster</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.progressContainer}>
+            <Text style={styles.progressText}>Genel Durum</Text>
+            <Progress.Circle
+              size={100}
+              progress={progress}
+              showsText={true}
+              formatText={() => `${Math.round(progress * 100)}%`}
+              color={'#6200ee'}
+            />
+          </View>
         </View>
-      </Modal>
+
+        <Modal
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+          animationType="slide"
+          transparent={true}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>{modalTitle}</Text>
+              <FlatList
+                data={modalData}
+                renderItem={renderOrderItem}
+                keyExtractor={(item, index) => index.toString()}
+                contentContainerStyle={{paddingBottom: 20}}
+              />
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.closeButton}>
+                <Text style={styles.buttonText}>Kapat</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </SafeAreaView>
     </SafeAreaView>
   );
 };
@@ -205,6 +261,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: 'white',
+  },
+  lottieBackground: {
+    width: '100%',
+    height: '140%',
+    position: 'absolute',
+    zIndex: -1,
   },
   title: {
     fontSize: 24,
@@ -233,7 +295,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     flex: 0.6,
-    justifyContent: 'center',
   },
   progressText: {
     fontSize: 20,
