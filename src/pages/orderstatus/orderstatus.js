@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   Image,
   SafeAreaView,
   TouchableOpacity,
@@ -15,6 +14,7 @@ import {formatDistance, parseISO} from 'date-fns';
 import {tr} from 'date-fns/locale';
 import * as Progress from 'react-native-progress';
 import LottieView from 'lottie-react-native';
+import styles from './orderstatus.style';
 
 const OrderStatusScreen = props => {
   const [completedCount, setCompletedCount] = useState(0);
@@ -98,15 +98,31 @@ const OrderStatusScreen = props => {
 
   const renderOrderItem = ({item}) => (
     <View style={styles.orderItem}>
-      <View style={{flexDirection: 'row'}}>
+      <View style={styles.contentText}>
         <Text>TARİH: {new Date(item.date).toLocaleString()} </Text>
         <Text style={{textAlign: 'right', flex: 1}}>{item.formatedDate}</Text>
       </View>
-      <Text>FİRMA:{item.isteyenFirma}</Text>
-      <Text>ÜRÜN: {item.urunAdi}</Text>
-      <Text>RENK: {item.urunRengi}</Text>
-      <Text>ÖLÇÜ: {item.urunOlcusu}</Text>
-      <Text>ADET: {item.urunAdedi}</Text>
+
+      <View style={styles.contentText}>
+        <Text style={{flex: 1}}>FİRMA: </Text>
+        <Text style={{flex: 1, fontWeight: 'bold'}}>{item.isteyenFirma}</Text>
+      </View>
+      <View style={styles.contentText}>
+        <Text style={{flex: 1}}>ÜRÜN: </Text>
+        <Text style={{flex: 1, fontWeight: 'bold'}}>{item.urunAdi}</Text>
+      </View>
+      <View style={styles.contentText}>
+        <Text style={{flex: 1}}>RENK: </Text>
+        <Text style={{flex: 1, fontWeight: 'bold'}}>{item.urunRengi}</Text>
+      </View>
+      <View style={styles.contentText}>
+        <Text style={{flex: 1}}>ÖLÇÜ: </Text>
+        <Text style={{flex: 1, fontWeight: 'bold'}}>{item.urunOlcusu}</Text>
+      </View>
+      <View style={styles.contentText}>
+        <Text style={{flex: 1}}>ADET: </Text>
+        <Text style={{flex: 1, fontWeight: 'bold'}}>{item.urunAdedi}</Text>
+      </View>
     </View>
   );
 
@@ -176,45 +192,45 @@ const OrderStatusScreen = props => {
         />
         <View style={styles.statusContainer}>
           <View style={styles.statusRow}>
-            <Text style={styles.statusText}>
-              Tamamlanan Siparişler: {completedCount}
-            </Text>
+            <Text style={styles.statusText}>Tamamlanan Siparişler:</Text>
+            <Text style={styles.countText}>{completedCount}</Text>
             <TouchableOpacity
+              style={styles.btnStyle}
               onPress={() =>
                 openModal('Tamamlanan Siparişler', completedOrders)
               }>
-              <Text style={styles.buttonText}>Göster</Text>
+              <Text style={styles.buttonText}>Listele</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.statusRow}>
-            <Text style={styles.statusText}>
-              Devam Eden Siparişler: {ongoingCount}
-            </Text>
+            <Text style={styles.statusText}>Devam Eden Siparişler:</Text>
+            <Text style={styles.countText}>{ongoingCount}</Text>
             <TouchableOpacity
+              style={styles.btnStyle}
               onPress={() => openModal('Devam Eden Siparişler', ongoingOrders)}>
-              <Text style={styles.buttonText}>Göster</Text>
+              <Text style={styles.buttonText}>Listele</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.statusRow}>
-            <Text style={styles.statusText}>
-              Bekleyen Siparişler: {notComplatedCount}
-            </Text>
+            <Text style={styles.statusText}>Bekleyen Siparişler:</Text>
+            <Text style={styles.countText}>{notComplatedCount}</Text>
             <TouchableOpacity
+              style={styles.btnStyle}
               onPress={() =>
                 openModal('Bekleyen Siparişler', notComplatedOrders)
               }>
-              <Text style={styles.buttonText}>Göster</Text>
+              <Text style={styles.buttonText}>Listele</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.statusRow}>
-            <Text style={styles.statusText}>
-              İptal Edilen Siparişler: {cancelledCount}
-            </Text>
+            <Text style={styles.statusText}>İptal Edilen Siparişler:</Text>
+            <Text style={styles.countText}>{cancelledCount}</Text>
             <TouchableOpacity
+              style={styles.btnStyle}
               onPress={() =>
                 openModal('İptal Edilen Siparişler', cancelledOrders)
               }>
-              <Text style={styles.buttonText}>Göster</Text>
+              <Text style={styles.buttonText}>Listele</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.progressContainer}>
@@ -255,80 +271,5 @@ const OrderStatusScreen = props => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: 'white',
-  },
-  lottieBackground: {
-    width: '100%',
-    height: '140%',
-    position: 'absolute',
-    zIndex: -1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  statusContainer: {
-    marginBottom: 20,
-    flex: 1,
-  },
-  statusRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  statusText: {
-    fontSize: 16,
-  },
-  buttonText: {
-    color: 'blue',
-    fontSize: 16,
-  },
-  progressContainer: {
-    alignItems: 'center',
-    marginTop: 20,
-    flex: 0.6,
-  },
-  progressText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  orderItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    height: '80%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  closeButton: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-});
 
 export default OrderStatusScreen;

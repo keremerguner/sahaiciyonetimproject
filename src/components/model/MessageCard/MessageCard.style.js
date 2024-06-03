@@ -61,11 +61,13 @@ export default StyleSheet.create({
   },
   text: {
     fontSize: 14,
+    flex:1,
     color: '#333333',
     marginBottom: 5,
   },
   text_color: {
     fontSize: 14,
+    flex:1,
     color: 'black',
     marginBottom: 5,
   },
