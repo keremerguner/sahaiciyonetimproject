@@ -76,7 +76,7 @@ const Profile = props => {
                 style={{
                   flex: 1,
                   fontSize: 30,
-                  color: '#930AFF',
+                  color: 'black',
                   textAlign: 'center',
                 }}>
                 Bilgilerim
@@ -185,7 +185,7 @@ const Profile = props => {
                 style={{
                   flex: 1,
                   fontSize: 30,
-                  color: '#930AFF',
+                  color: 'black',
                   textAlign: 'center',
                 }}>
                 Bilgilerim

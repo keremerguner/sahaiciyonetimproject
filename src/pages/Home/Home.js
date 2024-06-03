@@ -210,7 +210,7 @@ const Home = props => {
               onPress={() => props.navigation.navigate('OrderStatus')}>
               <Image
                 source={require('../../assets/images/checklist.png')}
-                style={{width: 30, height: 30, tintColor: '#930AFF'}}
+                style={{width: 30, height: 30, tintColor: 'black'}}
               />
             </TouchableOpacity>
           </SafeAreaView>

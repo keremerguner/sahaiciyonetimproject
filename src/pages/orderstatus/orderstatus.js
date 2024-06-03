@@ -145,7 +145,7 @@ const OrderStatusScreen = props => {
             style={{
               width: 30,
               height: 30,
-              tintColor: '#930AFF',
+              tintColor: 'black',
             }}
           />
         </TouchableOpacity>

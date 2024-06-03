@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, TextInput, Text} from 'react-native';
+import {View, TextInput, Text, TouchableOpacity, Image} from 'react-native';
 import Button from '../../Button';
 import styles from './ContentInputModal.style';
 import Modal from 'react-native-modal';
 import {showMessage} from 'react-native-flash-message';
 import RNPickerSelect from 'react-native-picker-select';
 import CheckBox from '@react-native-community/checkbox';
-
-import database from '@react-native-firebase/database'; // Database modülünü import edin
+import database from '@react-native-firebase/database';
 
 const ContentInputModal = ({isVisible, onClose, onSend}) => {
   const [atananUsta, setAtananUsta] = useState(null);
@@ -17,7 +16,7 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
   const [urunAdedi, setUrunAdedi] = useState(null);
   const [urunOlcusu, setUrunOlcusu] = useState(null);
   const [isteyenFirma, setIsteyenFirma] = useState(null);
-  const [users, setUsers] = useState([]); // Kullanıcıları tutacak state
+  const [users, setUsers] = useState([]);
 
   const [firmaModalVisible, setFirmaModalVisible] = useState(false);
   const [newFirmaName, setNewFirmaName] = useState('');
@@ -27,7 +26,10 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
   const [newOlcu, setNewOlcu] = useState('');
   const [olcuList, setOlcuList] = useState([]);
 
-  // Kullanıcıları yükleme
+  const [renkModalVisible, setRenkModalVisible] = useState(false);
+  const [newRenk, setNewRenk] = useState('');
+  const [renkList, setRenkList] = useState([]);
+
   useEffect(() => {
     const usersRef = database().ref('users');
     usersRef.on('value', snapshot => {
@@ -41,8 +43,6 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
       });
       setUsers(usersArray);
     });
-
-    // Listener'ı temizleme
     return () => usersRef.off('value');
   }, []);
 
@@ -58,7 +58,6 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
       });
       setFirmaList(loadedFirmalar);
     });
-
     return () => firmaRef.off('value');
   }, []);
 
@@ -74,9 +73,24 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
       });
       setOlcuList(loadedOlculer);
     });
-
     return () => olcuRef.off('value');
   }, []);
+
+  useEffect(() => {
+    const renkRef = database().ref('renkler');
+    renkRef.on('value', snapshot => {
+      const loadedRenkler = [];
+      snapshot.forEach(snap => {
+        loadedRenkler.push({
+          label: snap.val().renk,
+          value: snap.val().renk,
+        });
+      });
+      setRenkList(loadedRenkler);
+    });
+    return () => renkRef.off('value');
+  }, []);
+
   const addFirma = () => {
     if (newFirmaName.trim() !== '') {
       const firmaRef = database().ref('firmalar');
@@ -131,6 +145,33 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
     }
   };
 
+  const addRenk = () => {
+    if (newRenk.trim() !== '') {
+      const renkRef = database().ref('renkler');
+      renkRef
+        .push({renk: newRenk})
+        .then(() => {
+          setNewRenk('');
+          setRenkModalVisible(false);
+          showMessage({
+            message: 'Renk başarıyla eklendi!',
+            type: 'success',
+          });
+        })
+        .catch(error => {
+          showMessage({
+            message: `Renk eklenirken hata oluştu: ${error.message}`,
+            type: 'danger',
+          });
+        });
+    } else {
+      showMessage({
+        message: 'Lütfen bir renk giriniz!',
+        type: 'danger',
+      });
+    }
+  };
+
   function handleSend() {
     setLoading(true);
     if (
@@ -156,7 +197,7 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
         urunRengi,
         urunAdedi,
         urunOlcusu,
-        'ATANDI' // Yeni eklediğimiz parametre
+        'ATANDI',
       );
       setIsteyenFirma(null);
       setAtananUsta(null);
@@ -177,11 +218,28 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
       style={styles.modal}
       swipeDirection="down">
       <View style={styles.container}>
+        {/* Firma Ekle Modal */}
         <Modal
           isVisible={firmaModalVisible}
           onBackdropPress={() => setFirmaModalVisible(false)}>
           <View
             style={{backgroundColor: 'white', padding: 20, borderRadius: 10}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={{fontWeight: 'bold', fontSize: 20}}>Firma Adı</Text>
+              <TouchableOpacity
+                onPress={() => setFirmaModalVisible(false)}
+                style={{flex: 1}}>
+                <Image
+                  source={require('../../../assets/images/cross-button.png')}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: '#cf142b',
+                    alignSelf: 'flex-end',
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
             <TextInput
               placeholder="Firma adı giriniz"
               value={newFirmaName}
@@ -196,6 +254,100 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
             <Button text="Ekle" onPress={addFirma} />
           </View>
         </Modal>
+
+        {/* Ölçü Ekle Modal */}
+        <Modal
+          isVisible={olcuModalVisible}
+          onBackdropPress={() => setOlcuModalVisible(false)}>
+          <View
+            style={{backgroundColor: 'white', padding: 20, borderRadius: 10}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={{fontWeight: 'bold', fontSize: 20}}>
+                Ürün Ölçüsü
+              </Text>
+              <TouchableOpacity
+                onPress={() => setOlcuModalVisible(false)}
+                style={{flex: 1}}>
+                <Image
+                  source={require('../../../assets/images/cross-button.png')}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: '#cf142b',
+                    alignSelf: 'flex-end',
+                    marginBottom: 10,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <TextInput
+              placeholder="Ürün Ölçüsü Giriniz"
+              value={newOlcu}
+              onChangeText={setNewOlcu}
+              style={{
+                height: 40,
+                borderColor: 'gray',
+                borderWidth: 1,
+                marginBottom: 10,
+              }}
+            />
+            <Button text="Ekle" onPress={addOlcu} />
+          </View>
+        </Modal>
+
+        {/* Renk Ekle Modal */}
+        <Modal
+          isVisible={renkModalVisible}
+          onBackdropPress={() => setRenkModalVisible(false)}>
+          <View
+            style={{backgroundColor: 'white', padding: 20, borderRadius: 10}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={{fontWeight: 'bold', fontSize: 20}}>Renk</Text>
+              <TouchableOpacity
+                onPress={() => setRenkModalVisible(false)}
+                style={{flex: 1}}>
+                <Image
+                  source={require('../../../assets/images/cross-button.png')}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: '#cf142b',
+                    alignSelf: 'flex-end',
+                    marginBottom: 10,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <TextInput
+              placeholder="Renk Giriniz"
+              value={newRenk}
+              onChangeText={setNewRenk}
+              style={{
+                height: 40,
+                borderColor: 'gray',
+                borderWidth: 1,
+                marginBottom: 10,
+              }}
+            />
+            <Button text="Ekle" onPress={addRenk} />
+          </View>
+        </Modal>
+
+        {/* Atanan Usta START */}
+        <View style={styles.input_container}>
+          <RNPickerSelect
+            style={styles.picker}
+            onValueChange={value => {
+              const selectedUser = users.find(user => user.value === value);
+              setAtananUsta(selectedUser ? selectedUser.email : null);
+            }}
+            items={users}
+            placeholder={{label: 'Atanan Usta Seçin...', value: null}}
+          />
+        </View>
+        {/* Atanan Usta END */}
+
+        {/* Firma Sec START */}
         <View style={{flexDirection: 'row'}}>
           <View
             style={{
@@ -218,18 +370,9 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
             onPress={() => setFirmaModalVisible(true)}
           />
         </View>
-        <View style={styles.input_container}>
-          <RNPickerSelect
-            style={styles.picker}
-            onValueChange={value => {
-              const selectedUser = users.find(user => user.value === value);
-              // console.log('selectedUser', selectedUser);
-              setAtananUsta(selectedUser ? selectedUser.email : null);
-            }}
-            items={users}
-            placeholder={{label: 'Atanan Usta Seçin...', value: null}}
-          />
-        </View>
+        {/* Firma Sec END */}
+
+        {/* Urun START */}
         <View style={styles.input2}>
           <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
             <CheckBox
@@ -253,17 +396,31 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
             <Text>Yatak</Text>
           </View>
         </View>
-        <View style={styles.input_container}>
-          <RNPickerSelect
-            onValueChange={value => setUrunRengi(value)}
-            items={[
-              {label: 'Mavi', value: 'Mavi'},
-              {label: 'Gri', value: 'Gri'},
-              {label: 'Krem', value: 'Krem'},
-            ]}
-            placeholder={{label: 'Ürün Rengi Seçin...', value: null}}
-          />
+        {/* Urun END */}
+
+        {/* Urun Renk START */}
+        <View style={{flexDirection: 'row'}}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'white',
+              borderRadius: 12,
+              borderColor: '#4A90E2',
+              borderWidth: 0.5,
+              marginTop: 6,
+              justifyContent: 'center',
+            }}>
+            <RNPickerSelect
+              onValueChange={value => setUrunRengi(value)}
+              items={renkList}
+              placeholder={{label: 'Ürün Rengi Seçin...', value: null}}
+            />
+          </View>
+          <Button text="Renk Ekle" onPress={() => setRenkModalVisible(true)} />
         </View>
+        {/* Urun Renk END */}
+
+        {/* Urun Adedi START */}
         <View style={styles.input_container}>
           <RNPickerSelect
             onValueChange={value => setUrunAdedi(value)}
@@ -271,31 +428,21 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
               {label: '1', value: '1'},
               {label: '2', value: '2'},
               {label: '3', value: '3'},
+              {label: '4', value: '4'},
+              {label: '5', value: '5'},
+              {label: '6', value: '6'},
+              {label: '7', value: '7'},
+              {label: '8', value: '8'},
+              {label: '9', value: '9'},
+              {label: '10', value: '10'},
               // Diğer değerler
             ]}
             placeholder={{label: 'Ürün Adedi Seçin...', value: null}}
           />
         </View>
+        {/* Urun Adedi END */}
 
-        <Modal
-          isVisible={olcuModalVisible}
-          onBackdropPress={() => setOlcuModalVisible(false)}>
-          <View
-            style={{backgroundColor: 'white', padding: 20, borderRadius: 10}}>
-            <TextInput
-              placeholder="Ürün Ölçüsü Giriniz"
-              value={newOlcu}
-              onChangeText={setNewOlcu}
-              style={{
-                height: 40,
-                borderColor: 'gray',
-                borderWidth: 1,
-                marginBottom: 10,
-              }}
-            />
-            <Button text="Ekle" onPress={addOlcu} />
-          </View>
-        </Modal>
+        {/* Urun Olcusu START */}
         <View style={{flexDirection: 'row'}}>
           <View
             style={{
@@ -315,6 +462,7 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
           </View>
           <Button text="Ölçü Ekle" onPress={() => setOlcuModalVisible(true)} />
         </View>
+        {/* Urun Olcusu END */}
 
         <Button text="Üretime Gönder" onPress={handleSend} loading={loading} />
       </View>
