@@ -435,7 +435,10 @@ const ContentInputModal = ({isVisible, onClose, onSend}) => {
               {label: '8', value: '8'},
               {label: '9', value: '9'},
               {label: '10', value: '10'},
-              // Diğer değerler
+              {label: '20', value: '20'},
+              {label: '30', value: '30'},
+              {label: '40', value: '40'},
+              {label: '50', value: '50'},
             ]}
             placeholder={{label: 'Ürün Adedi Seçin...', value: null}}
           />

@@ -44,12 +44,16 @@ export default StyleSheet.create({
     fontSize: 16,
     flex: 0.7,
   },
-
+  statusRowView: {
+    flex: 1,
+    justifyContent:'center',
+  },
   statusRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+
   },
   buttonText: {
     color: 'green',
@@ -57,8 +61,10 @@ export default StyleSheet.create({
   },
   progressContainer: {
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 20,
-    flex: 0.6,
+
+    flex: 1,
   },
   progressText: {
     fontSize: 20,

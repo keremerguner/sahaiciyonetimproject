@@ -13,16 +13,23 @@ import Home from './pages/Home';
 import Welcome from './pages/Welcome';
 import Profile from './pages/profile';
 import OrderStatusScreen from './pages/orderstatus/orderstatus';
+import UserTaskSummary from './pages/userTaskSummary'; // Yeni eklenen sayfa
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   const [userSession, setUserSession] = React.useState(null);
+  const [userEmail, setUserEmail] = React.useState('');
 
   React.useEffect(() => {
-    auth().onAuthStateChanged(user => {
+    const unsubscribe = auth().onAuthStateChanged(user => {
       setUserSession(!!user);
+      if (user) {
+        setUserEmail(user.email);
+      }
     });
+
+    return () => unsubscribe();
   }, []);
 
   const AuthStack = () => {
@@ -92,7 +99,18 @@ function App() {
               component={Profile}
               options={{headerShown: false}}
             />
-                  <Stack.Screen name="OrderStatus" component={OrderStatusScreen} options={{title: 'Sipariş Durumları'}} />
+            <Stack.Screen
+              name="OrderStatus"
+              component={OrderStatusScreen}
+              options={{title: 'Sipariş Durumları'}}
+            />
+            {userEmail === 'serdarerguner@gmail.com' && (
+              <Stack.Screen
+                name="UserTaskSummary"
+                component={UserTaskSummary}
+                options={{title: 'Kullanıcı Sipariş Durumları'}}
+              />
+            )}
           </>
         )}
       </Stack.Navigator>

@@ -96,6 +96,12 @@ const OrderStatusScreen = props => {
     return () => userOrdersRef.off('value', handleData);
   }, []);
 
+  const goToUserTaskSummary = () => {
+    props.navigation.navigate('UserTaskSummary');
+  };
+
+  const user = auth().currentUser;
+
   const renderOrderItem = ({item}) => (
     <View style={styles.orderItem}>
       <View style={styles.contentText}>
@@ -184,64 +190,93 @@ const OrderStatusScreen = props => {
         </View>
       </SafeAreaView>
       <SafeAreaView style={styles.container}>
-        <LottieView
-          source={require('../../assets/lottie/statusbg.json')}
-          style={styles.lottieBackground}
-          autoPlay
-          loop
-        />
         <View style={styles.statusContainer}>
-          <View style={styles.statusRow}>
-            <Text style={styles.statusText}>Tamamlanan Siparişler:</Text>
-            <Text style={styles.countText}>{completedCount}</Text>
-            <TouchableOpacity
-              style={styles.btnStyle}
-              onPress={() =>
-                openModal('Tamamlanan Siparişler', completedOrders)
-              }>
-              <Text style={styles.buttonText}>Listele</Text>
-            </TouchableOpacity>
+          <View style={styles.statusRowView}>
+            <View style={styles.statusRow}>
+              <Text style={styles.statusText}>Tamamlanan Siparişler:</Text>
+              <Text style={styles.countText}>{completedCount}</Text>
+              <TouchableOpacity
+                style={styles.btnStyle}
+                onPress={() =>
+                  openModal('Tamamlanan Siparişler', completedOrders)
+                }>
+                <Text style={styles.buttonText}>Listele</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.statusRow}>
+              <Text style={styles.statusText}>Devam Eden Siparişler:</Text>
+              <Text style={styles.countText}>{ongoingCount}</Text>
+              <TouchableOpacity
+                style={styles.btnStyle}
+                onPress={() =>
+                  openModal('Devam Eden Siparişler', ongoingOrders)
+                }>
+                <Text style={styles.buttonText}>Listele</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.statusRow}>
+              <Text style={styles.statusText}>Bekleyen Siparişler:</Text>
+              <Text style={styles.countText}>{notComplatedCount}</Text>
+              <TouchableOpacity
+                style={styles.btnStyle}
+                onPress={() =>
+                  openModal('Bekleyen Siparişler', notComplatedOrders)
+                }>
+                <Text style={styles.buttonText}>Listele</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.statusRow}>
+              <Text style={styles.statusText}>İptal Edilen Siparişler:</Text>
+              <Text style={styles.countText}>{cancelledCount}</Text>
+              <TouchableOpacity
+                style={styles.btnStyle}
+                onPress={() =>
+                  openModal('İptal Edilen Siparişler', cancelledOrders)
+                }>
+                <Text style={styles.buttonText}>Listele</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.statusRow}>
-            <Text style={styles.statusText}>Devam Eden Siparişler:</Text>
-            <Text style={styles.countText}>{ongoingCount}</Text>
-            <TouchableOpacity
-              style={styles.btnStyle}
-              onPress={() => openModal('Devam Eden Siparişler', ongoingOrders)}>
-              <Text style={styles.buttonText}>Listele</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.statusRow}>
-            <Text style={styles.statusText}>Bekleyen Siparişler:</Text>
-            <Text style={styles.countText}>{notComplatedCount}</Text>
-            <TouchableOpacity
-              style={styles.btnStyle}
-              onPress={() =>
-                openModal('Bekleyen Siparişler', notComplatedOrders)
-              }>
-              <Text style={styles.buttonText}>Listele</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.statusRow}>
-            <Text style={styles.statusText}>İptal Edilen Siparişler:</Text>
-            <Text style={styles.countText}>{cancelledCount}</Text>
-            <TouchableOpacity
-              style={styles.btnStyle}
-              onPress={() =>
-                openModal('İptal Edilen Siparişler', cancelledOrders)
-              }>
-              <Text style={styles.buttonText}>Listele</Text>
-            </TouchableOpacity>
-          </View>
+
           <View style={styles.progressContainer}>
             <Text style={styles.progressText}>Genel Durum</Text>
             <Progress.Circle
-              size={100}
+              size={200}
               progress={progress}
               showsText={true}
               formatText={() => `${Math.round(progress * 100)}%`}
               color={'#6200ee'}
             />
+          </View>
+          <View style={{flex: 1, justifyContent: 'flex-end'}}>
+            {user.email === 'serdarerguner@gmail.com' && (
+              <TouchableOpacity
+                style={{justifyContent: 'center', marginHorizontal: 10}}
+                onPress={goToUserTaskSummary}>
+                <View
+                  style={{
+                    backgroundColor: '#6200ee',
+                    padding: 10,
+                    borderRadius: 5,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      marginRight: 10,
+                      flex: 1,
+                      textAlign: 'center',
+                    }}>
+                    USTALARIN DETAYLI İŞ DURUMLARI
+                  </Text>
+                  <Image
+                    source={require('../../assets/images/arrow-right.png')}
+                    style={{width: 20, height: 20, tintColor: 'white'}}
+                  />
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 

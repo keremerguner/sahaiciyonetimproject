@@ -1,3 +1,4 @@
+// Home.js
 import React, {useState, useEffect} from 'react';
 import {
   Text,
@@ -18,18 +19,17 @@ import LottieView from 'lottie-react-native';
 const Home = props => {
   const [inputModalVisible, setInputModalVisible] = useState(false);
   const [contentList, setContentList] = useState([]);
-  const [loading, setLoading] = useState(true); // Yükleme durumu için state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     database()
       .ref('products/')
       .on('value', snapshot => {
         const contentData = snapshot.val();
-        // console.log('content data: ', contentData);
         const parsedData = parserContentData(contentData || {});
 
         setContentList(parsedData);
-        setLoading(false); // Veriler yüklendikten sonra loading'i false yap
+        setLoading(false);
       });
 
     return () => database().ref('products/').off('value');
@@ -46,7 +46,7 @@ const Home = props => {
     urunRengiContent,
     urunAdediContent,
     urunOlcusuContent,
-    complatedContent, // Yeni eklediğimiz parametre
+    complatedContent,
   ) {
     handleInputToggle();
     sendContent(
@@ -56,7 +56,7 @@ const Home = props => {
       urunRengiContent,
       urunAdediContent,
       urunOlcusuContent,
-      complatedContent, // Yeni eklediğimiz parametre
+      complatedContent,
     );
   }
 
@@ -67,7 +67,7 @@ const Home = props => {
     urunRengiContent,
     urunAdediContent,
     urunOlcusuContent,
-    complatedContent, // Yeni eklediğimiz parametre
+    complatedContent,
   ) {
     const userMail = auth().currentUser.email;
 
@@ -80,46 +80,39 @@ const Home = props => {
       urunOlcusu: urunOlcusuContent,
       username: userMail,
       date: new Date().toISOString(),
-      complated: complatedContent, // Yeni eklediğimiz parametre
+      complated: complatedContent,
     };
-
-    // console.log('gonderilen obje: ', contentObject);
 
     database().ref('products/').push(contentObject);
   }
 
   function handleComplated(item) {
-    // Eğer sipariş zaten tamamlanmışsa, hiçbir şey yapma
     if (item.complated === 'TAMAMLANDI') {
-      // console.log('Sipariş zaten tamamlandı olarak işaretlenmiş.');
       return;
     }
 
-    // Sipariş daha önce tamamlanmamışsa, tamamlanma zamanını güncelle
     const completedDate = new Date().toISOString();
     database().ref(`products/${item.id}/`).update({
       complated: 'TAMAMLANDI',
-      completedAt: completedDate, // Yeni tamamlanma tarihini kaydet
+      completedAt: completedDate,
     });
   }
-  // function handleNotComplated(item) {
-  //   database().ref(`products/${item.id}/`).update({complated: 'not complated'});
-  // }
+
   function handleNotComplated(item) {
     database().ref(`products/${item.id}/`).update({
       complated: 'İPTAL EDİLDİ!',
-      completedAt: null, // Tamamlanma zamanını sil
+      completedAt: null,
     });
   }
+
   function handleContinue(item) {
     database().ref(`products/${item.id}/`).update({
       complated: 'DEVAM EDİYOR...',
-      completedAt: null, // Tamamlanma zamanını sil
+      completedAt: null,
     });
   }
 
   const renderContent = ({item}) => {
-    // console.log('item.message', item.username)
     return (
       <MessageCard
         message={item}
@@ -228,7 +221,6 @@ const Home = props => {
           />
         </>
       )}
-      {/* <FlatList data={contentList} renderItem={renderContent} /> */}
     </SafeAreaView>
   );
 };
