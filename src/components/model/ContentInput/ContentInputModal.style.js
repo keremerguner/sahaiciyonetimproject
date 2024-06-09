@@ -8,7 +8,10 @@ export default StyleSheet.create({
     padding: 10,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    height: deviceSize.height / 1.9,
+    height:
+      Platform.OS === 'android'
+        ? deviceSize.height / 1.65
+        : deviceSize.height / 1.9,
   },
   input_container: {
     flex: Platform.OS === 'android' ? 0 : 1,
