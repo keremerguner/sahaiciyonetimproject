@@ -1194,7 +1194,7 @@ PODS:
   - RNCCheckbox (0.5.17):
     - BEMCheckBox (~> 1.4)
     - React-Core
-  - RNCPicker (2.7.5):
+  - RNCPicker (2.7.6):
     - React-Core
   - RNFBApp (19.0.1):
     - Firebase/CoreOnly (= 10.22.0)
@@ -1494,7 +1494,7 @@ SPEC CHECKSUMS:
   ReactCommon: e168ee1704806f10f47ee8c7f825b5850b18eaea
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   RNCCheckbox: a3ca9978cb0846b981d28da4e9914bd437403d77
-  RNCPicker: 3e2c37a8328f368ce14da050cdc8231deb5fc9f9
+  RNCPicker: f58e790450cb0a74c09dd1c677bd1de41a5741b9
   RNFBApp: d0be9224f318cfd6501f1f83809453800cd04868
   RNFBAuth: f0722d3ea63e6b5c2ed67c8d19acb17d5738438b
   RNFBDatabase: c570838c2ec61e7a439f812278afafdfd5166263
