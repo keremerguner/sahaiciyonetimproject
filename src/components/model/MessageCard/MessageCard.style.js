@@ -54,21 +54,53 @@ export default StyleSheet.create({
     paddingVertical: 6,
     marginHorizontal: 6,
     backgroundColor: 'white',
-    borderColor:'green'
+    borderColor: 'green',
   },
   buttonText: {
     color: '#31B731',
   },
   text: {
     fontSize: 14,
-    flex:1,
+    flex: 1,
     color: '#333333',
     marginBottom: 5,
   },
   text_color: {
     fontSize: 14,
-    flex:1,
+    flex: 1,
     color: 'black',
     marginBottom: 5,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    paddingTop: 40, // Added padding to avoid overlap
+  },
+  cancellationInput: {
+    width: '100%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
+  cancelButton: {
+    backgroundColor: '#cf142b',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  cancledButtonText: {
+    color: 'white',
   },
 });

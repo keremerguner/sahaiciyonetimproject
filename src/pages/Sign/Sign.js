@@ -167,12 +167,14 @@ const Sign = props => {
                   value={values.name}
                   style={styles.input}
                   placeholder="Ad"
+                  placeholderTextColor="#999"
                 />
                 <TextInput
                   onChangeText={handleChange('surname')}
                   value={values.surname}
                   style={styles.input}
                   placeholder="Soyad"
+                  placeholderTextColor="#999"
                 />
                 <TextInput
                   onChangeText={handleChange('phone')}
@@ -181,6 +183,7 @@ const Sign = props => {
                   value={values.phone}
                   style={styles.input}
                   placeholder="Telefon numarası"
+                  placeholderTextColor="#999"
                 />
                 <TextInput
                   onChangeText={handleChange('usermail')}
@@ -189,6 +192,7 @@ const Sign = props => {
                   autoCapitalize="none"
                   style={styles.input}
                   placeholder="E-posta adresi"
+                  placeholderTextColor="#999"
                 />
                 <TextInput
                   value={values.password}
@@ -197,6 +201,7 @@ const Sign = props => {
                   autoCapitalize="none"
                   style={styles.input}
                   placeholder="Şifreyi girin"
+                  placeholderTextColor="#999"
                 />
                 <TextInput
                   onChangeText={handleChange('repassword')}
@@ -205,6 +210,7 @@ const Sign = props => {
                   autoCapitalize="none"
                   style={styles.input}
                   placeholder="Şifreyi tekrar girin"
+                  placeholderTextColor="#999"
                 />
               </View>
               {/* INPUT END */}

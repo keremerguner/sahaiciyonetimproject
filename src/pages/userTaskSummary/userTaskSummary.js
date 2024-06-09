@@ -22,6 +22,9 @@ const UserTaskSummary = props => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedUserOrders, setSelectedUserOrders] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [cancellationReasonModalVisible, setCancellationReasonModalVisible] =
+    useState(false);
+  const [cancellationReason, setCancellationReason] = useState('');
 
   const fetchData = async () => {
     const snapshot = await database().ref('users').once('value');
@@ -93,7 +96,11 @@ const UserTaskSummary = props => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              setSelectedUserOrders(item.orders.reverse());
+              if (item.orders.length === 0) {
+                setSelectedUserOrders([{id: 'no-data', text: 'İş durumu bulunamadı.'}]);
+              } else {
+                setSelectedUserOrders(item.orders.reverse());
+              }
               setModalVisible(true);
             }}>
             <Text style={styles.buttonText}>İşleri Listele</Text>
@@ -120,6 +127,14 @@ const UserTaskSummary = props => {
   };
 
   const renderOrderItem = ({item}) => {
+    if (item.id === 'no-data') {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>{item.text}</Text>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.orderItem}>
         <Text>Firma: {item.isteyenFirma}</Text>
@@ -136,9 +151,26 @@ const UserTaskSummary = props => {
           </Text>
         )}
         <Text>Tarih: {new Date(item.date).toLocaleString()}</Text>
+        {item.complated === 'İPTAL EDİLDİ!' && (
+          <TouchableOpacity
+            style={styles.infoIcon}
+            onPress={() => {
+              setModalVisible(false);
+              setCancellationReason(item.cancellationReason);
+              setTimeout(() => {
+                setCancellationReasonModalVisible(true);
+              }, 100);
+            }}>
+            <Image
+              source={require('../../assets/images/info.png')}
+              style={{width: 24, height: 24}}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <>
@@ -216,6 +248,33 @@ const UserTaskSummary = props => {
             />
             <TouchableOpacity
               onPress={() => setModalVisible(false)}
+              style={styles.closeButton}>
+              <Text style={styles.buttonText}>Kapat</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        visible={cancellationReasonModalVisible}
+        onRequestClose={() => {
+          setCancellationReasonModalVisible(false);
+          setTimeout(() => {
+            setModalVisible(true);
+          }, 100);
+        }}
+        animationType="slide"
+        transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>İptal Nedeni</Text>
+            <Text>{cancellationReason}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setCancellationReasonModalVisible(false);
+                setTimeout(() => {
+                  setModalVisible(true);
+                }, 100);
+              }}
               style={styles.closeButton}>
               <Text style={styles.buttonText}>Kapat</Text>
             </TouchableOpacity>

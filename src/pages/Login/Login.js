@@ -100,6 +100,7 @@ const Login = props => {
                   keyboardType="email-address"
                   style={styles.input}
                   placeholder="Email"
+                  placeholderTextColor="#999"
                 />
                 <TextInput
                   value={values.password}
@@ -108,6 +109,7 @@ const Login = props => {
                   autoCapitalize="none"
                   style={styles.input}
                   placeholder="Şifre"
+                  placeholderTextColor="#999" 
                 />
                 <TouchableOpacity
                   onPress={() =>

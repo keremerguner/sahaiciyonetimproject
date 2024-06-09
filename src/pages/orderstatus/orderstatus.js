@@ -134,7 +134,11 @@ const OrderStatusScreen = props => {
 
   const openModal = (title, data) => {
     setModalTitle(title);
-    setModalData(data);
+    if (data.length === 0) {
+      setModalData([{id: 'no-data', text: 'Sipariş durumu yok.'}]);
+    } else {
+      setModalData(data);
+    }
     setModalVisible(true);
   };
 
@@ -288,12 +292,18 @@ const OrderStatusScreen = props => {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>{modalTitle}</Text>
-              <FlatList
-                data={modalData}
-                renderItem={renderOrderItem}
-                keyExtractor={(item, index) => index.toString()}
-                contentContainerStyle={{paddingBottom: 20}}
-              />
+              {modalData[0]?.id === 'no-data' ? (
+                <View style={{justifyContent: 'center', flex: 1}}>
+                  <Text style={styles.noDataText}>{modalData[0].text}</Text>
+                </View>
+              ) : (
+                <FlatList
+                  data={modalData}
+                  renderItem={renderOrderItem}
+                  keyExtractor={(item, index) => index.toString()}
+                  contentContainerStyle={{paddingBottom: 20}}
+                />
+              )}
               <TouchableOpacity
                 onPress={() => setModalVisible(false)}
                 style={styles.closeButton}>

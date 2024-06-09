@@ -93,4 +93,13 @@ export default StyleSheet.create({
     right: 0,
     bottom: 60,
   },
+  infoIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 30, 
+    height: 30, 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

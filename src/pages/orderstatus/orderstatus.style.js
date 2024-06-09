@@ -46,14 +46,14 @@ export default StyleSheet.create({
   },
   statusRowView: {
     flex: 1,
-    justifyContent:'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
   },
   statusRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
-
   },
   buttonText: {
     color: 'green',
@@ -84,7 +84,7 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
-    width: '80%',
+    width: '90%',
     height: '80%',
     backgroundColor: 'white',
     borderRadius: 10,
@@ -102,5 +102,11 @@ export default StyleSheet.create({
   contentText: {
     flexDirection: 'row',
     marginVertical: 3,
+  },
+  noDataText: {
+    fontSize: 18,
+    color: 'gray',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });

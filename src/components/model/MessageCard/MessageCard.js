@@ -7,6 +7,7 @@ import {
   Animated,
   Image,
   Linking,
+  TextInput,
 } from 'react-native';
 import styles from './MessageCard.style';
 import {formatDistance, parseISO} from 'date-fns';
@@ -14,10 +15,13 @@ import {tr} from 'date-fns/locale';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 import {showMessage} from 'react-native-flash-message';
+import Modal from 'react-native-modal';
 
 const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
   const userMail = auth().currentUser.email;
   const [userFullName, setUserFullName] = useState('');
+  const [cancellationReason, setCancellationReason] = useState('');
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const userRef = database()
@@ -30,14 +34,10 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
           const userData = childSnapshot.val();
           setUserFullName(`${userData.name} ${userData.surname}`);
         });
-      } else {
-        // sürekli ekrana basıyo
-        // console.log('Geçersiz kullanıcı adı:', message.username);
       }
     });
   }, [message.username]);
 
-  // Duruma göre başlangıç renk değerini al
   const getInitialColorValue = status => {
     switch (status) {
       case 'TAMAMLANDI':
@@ -49,7 +49,6 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
     }
   };
 
-  // Duruma göre renk değerini al
   const getColorValue = status => {
     switch (status) {
       case 'TAMAMLANDI':
@@ -61,7 +60,6 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
     }
   };
 
-  // İlk renk değerini belirle
   const initialColorValue = getInitialColorValue(message.complated);
   const borderColorAnim = useRef(new Animated.Value(initialColorValue)).current;
 
@@ -104,8 +102,8 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
 
   const handleComplatedWithConfirmation = () => {
     Alert.alert(
-      'Sipariş Durumu Güncelleme', // Başlık
-      'İş tamamlandı olarak işaretlemek istediğinize emin misiniz?', // Mesaj
+      'Sipariş Durumu Güncelleme',
+      'İş tamamlandı olarak işaretlemek istediğinize emin misiniz?',
       [
         {
           text: 'İptal',
@@ -137,46 +135,45 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
   };
 
   const handleNotComplatedWithConfirmation = () => {
-    Alert.alert(
-      'Sipariş Durumu Güncelleme', // Başlık
-      'Siparişi İPTAL etmek istediğinize emin misiniz?', // Mesaj
-      [
-        {
-          text: 'İptal',
-          style: 'cancel',
-        },
-        {
-          text: 'Evet',
-          onPress: () => {
-            const cancellationTime = new Date().toISOString();
-            database()
-              .ref(`products/${message.id}`)
-              .update({
-                complated: 'İPTAL EDİLDİ!',
-                cancelledAt: cancellationTime,
-              })
-              .then(() => {
-                showMessage({
-                  message: 'Sipariş İPTAL EDİLDİ!',
-                  type: 'danger',
-                });
-              })
-              .catch(error => {
-                showMessage({
-                  message: `Sipariş iptal edilirken hata oluştu: ${error.message}`,
-                  type: 'danger',
-                });
-              });
-          },
-        },
-      ],
-    );
+    setModalVisible(true);
+  };
+
+  const handleCancelOrder = () => {
+    if (!cancellationReason) {
+      showMessage({
+        message: 'Lütfen iptal nedeni giriniz!',
+        type: 'danger',
+      });
+      return;
+    }
+    const cancellationTime = new Date().toISOString();
+    database()
+      .ref(`products/${message.id}`)
+      .update({
+        complated: 'İPTAL EDİLDİ!',
+        cancelledAt: cancellationTime,
+        cancellationReason: cancellationReason,
+      })
+      .then(() => {
+        showMessage({
+          message: 'Sipariş İPTAL EDİLDİ!',
+          type: 'danger',
+        });
+        setModalVisible(false);
+        setCancellationReason('');
+      })
+      .catch(error => {
+        showMessage({
+          message: `Sipariş iptal edilirken hata oluştu: ${error.message}`,
+          type: 'danger',
+        });
+      });
   };
 
   const handleContinue = () => {
     Alert.alert(
-      'Sipariş Durumu Güncelleme', // Başlık
-      'Siparişe devam etmek istediğinize emin misiniz?', // Mesaj
+      'Sipariş Durumu Güncelleme',
+      'Siparişe devam etmek istediğinize emin misiniz?',
       [
         {
           text: 'İptal',
@@ -191,6 +188,7 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
                 complated: 'DEVAM EDİYOR...',
                 completedAt: null,
                 cancelledAt: null,
+                cancellationReason: null,
               })
               .then(() => {
                 showMessage({
@@ -211,7 +209,6 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
   };
 
   const handleCall = () => {
-    // Telefon numarasını aramak için Linking modülünü kullanma
     Linking.openURL(`tel:${message.phoneNumber}`);
   };
 
@@ -321,6 +318,54 @@ const MessageCard = ({message, onComplated, onNotComplated, onContinue}) => {
           </TouchableOpacity>
         </View>
       )}
+
+      <Modal
+        isVisible={isModalVisible}
+        onBackdropPress={() => setModalVisible(false)}>
+        <View style={styles.modalContent}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setModalVisible(false)}>
+            <Image
+              source={require('../../../assets/images/cross-button.png')}
+              style={{width: 24, height: 24, tintColor: 'black'}}
+            />
+          </TouchableOpacity>
+          <TextInput
+            style={styles.cancellationInput}
+            placeholder="İptal nedeni giriniz..."
+            value={cancellationReason}
+            onChangeText={setCancellationReason}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              if (!cancellationReason) {
+                showMessage({
+                  message: 'Lütfen iptal nedeni giriniz!',
+                  type: 'danger',
+                });
+                return;
+              }
+              Alert.alert(
+                'Sipariş İptal',
+                'Siparişi iptal etmek istediğinizden emin misiniz?',
+                [
+                  {
+                    text: 'Hayır',
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Evet',
+                    onPress: handleCancelOrder,
+                  },
+                ],
+              );
+            }}
+            style={styles.cancelButton}>
+            <Text style={styles.cancledButtonText}>İPTAL ET</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </Animated.View>
   ) : null;
 };
