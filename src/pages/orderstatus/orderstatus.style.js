@@ -34,7 +34,7 @@ export default StyleSheet.create({
   },
 
   countText: {
-    flex: 0.5,
+    flex: 0.3,
   },
   orderButton: {
     flex: 0.5,
